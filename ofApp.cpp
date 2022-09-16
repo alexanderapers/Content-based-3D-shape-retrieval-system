@@ -14,7 +14,7 @@ void ofApp::setup(){
     camera.setAutoDistance(false);
     
     ofxAssimpModelLoader tempModel;
-    tempModel.loadModel("bunny.obj");
+    tempModel.loadModel("m281.obj");
     bunny = tempModel.getMesh(0);
     
     
@@ -27,7 +27,7 @@ void ofApp::setup(){
     lightColor = vec4(1.0f, 1.0f, 0.8f, 1.0f);
     
     matReflectivity = 0.3;
-    environmentMap.load("hdri_hub_environmentMap.jpg");
+   // environmentMap.load("hdri_hub_environmentMap.jpg");
     
     
     matTransparency = 0.7;
