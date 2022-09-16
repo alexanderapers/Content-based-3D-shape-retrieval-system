@@ -17,8 +17,6 @@ void ofApp::setup(){
     tempModel.loadModel("m281.obj");
     bunny = tempModel.getMesh(0);
     
-    
-    surfaceShader.load("simplePhong");
     matAmbient = vec4(0.1f, 0.1f, 0.2f, 1.0f);
     matDiffuse = vec4(0.2f, 0.5f, 0.7f, 1.0f);
     matSpecular =  vec4(3.5f, 4.0f, 5.0f, 1.0f);
@@ -45,18 +43,6 @@ void ofApp::draw(){
 
     ofEnableDepthTest();
     camera.begin();
-    surfaceShader.begin();
-    surfaceShader.setUniform4f("matAmbient", matAmbient);
-    surfaceShader.setUniform4f("matDiffuse", matDiffuse);
-    surfaceShader.setUniform4f("matSpecular", matSpecular);
-    surfaceShader.setUniform1f("matShininess", matShininess);
-    surfaceShader.setUniform4f("lightPosition", lightPosition);
-    surfaceShader.setUniform4f("lightColor", lightColor);
-    surfaceShader.setUniform1f("matReflectivity", matReflectivity);
-    surfaceShader.setUniformTexture("environmentMap", environmentMap.getTexture(), 1);
-    surfaceShader.setUniform1f("matRefractivity", matTransparency);
-    surfaceShader.setUniform1f("matRefractiveIndex", matRefractiveIndex);
-    bunny.draw();
     surfaceShader.end();
     ofDrawGrid(2.0f, 10, false, false, true, false);
     camera.end();
