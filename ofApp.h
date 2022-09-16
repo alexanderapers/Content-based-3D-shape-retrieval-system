@@ -28,7 +28,7 @@ class ofApp : public ofBaseApp{
     ofEasyCam camera;
     ofVboMesh bunny;
     
-    ofShader surfaceShader;
+   // ofShader surfaceShader;
     vec4 matAmbient;
     vec4 matDiffuse;
     vec4 matSpecular;
