@@ -44,7 +44,7 @@ class Dataset:
         for folder in os.listdir(shape_dir):
             if not folder.startswith("."):
                 for filename in os.listdir(shape_dir + folder):
-                    if filename.endswith(".ply") or filename.endswith(".obj") or filename endswith("off"):
+                    if filename.endswith(".ply") or filename.endswith(".obj") or filename.endswith("off"):
                         file_path = shape_dir + folder + "/" + filename
                         yield file_path
 
