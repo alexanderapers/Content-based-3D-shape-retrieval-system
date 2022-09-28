@@ -1,12 +1,28 @@
 import os
 import trimesh
-import random
+import sys
+
+def show_mesh(mesh_name):
+    for mesh_file_path in get_all_meshes():
+        if mesh_file_path.split("/")[-1] == mesh_name:
+            mesh = trimesh.load(mesh_file_path)
+            mesh.show()
+
+
+def get_all_meshes():
+    """ Returns an iterator with all the file paths to meshes in the Princeton folder """
+    shape_dir = os.getcwd() + "/Princeton/"
+    for folder in os.listdir(shape_dir):
+        if not folder.startswith("."):
+            for filename in os.listdir(shape_dir + folder):
+                if filename.endswith(".ply"):
+                    file_path = shape_dir + folder + "/" + filename
+                    yield file_path
+
 
 if __name__ == "__main__":
-    # set paths to folder containing 3D shapes
 
-    for filename in os.listdir(os.getcwd()):
-        if filename.endswith(".obj"):
-            # use trimesh to load and display 3D meshes
-            turtle_mesh = trimesh.load(filename)
-            turtle_mesh.show()
+    if len(sys.argv) == 2:
+        show_mesh(sys.argv[1])
+    else:
+        show_mesh("m0.ply")
