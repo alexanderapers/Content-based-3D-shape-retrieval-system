@@ -31,7 +31,7 @@ class Dataset:
         """ Returns an iterator with all meshes """
         for mesh_file_path in self.meshes_file_paths:
 
-            with open(mesh_file_path):
+            #with open(mesh_file_path):
 
 
             mesh = Mesh(mesh_file_path)
