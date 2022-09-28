@@ -6,7 +6,7 @@ class Dataset:
     def __init__(self,  folder_name_dataset, write_csv=False):
         self.folder_name_dataset = folder_name_dataset
         self.meshes_file_paths = self.get_all_meshes_file_paths()
-        self.meshes = self.get_all_meshes()
+        self.meshes = self.make_all_meshes()
         if write_csv:
             self.write_csv()
 
@@ -27,9 +27,13 @@ class Dataset:
         return list(self.meshes)
 
 
-    def get_all_meshes(self):
+    def make_all_meshes(self):
         """ Returns an iterator with all meshes """
         for mesh_file_path in self.meshes_file_paths:
+
+            with open(mesh_file_path):
+
+
             mesh = Mesh(mesh_file_path)
             yield mesh
 
@@ -40,7 +44,7 @@ class Dataset:
         for folder in os.listdir(shape_dir):
             if not folder.startswith("."):
                 for filename in os.listdir(shape_dir + folder):
-                    if filename.endswith(".ply"):
+                    if filename.endswith(".ply") or filename.endswith(".obj") or filename endswith("off"):
                         file_path = shape_dir + folder + "/" + filename
                         yield file_path
 
@@ -53,6 +57,10 @@ class Dataset:
 
 
     def show_mesh(self, mesh_name):
+        found = False
         for mesh_file_path in self.get_all_meshes_file_paths():
             if mesh_file_path.split("/")[-1] == mesh_name:
+                found = True
                 Mesh(mesh_file_path).show()
+        if not found:
+            raise Exception("This mesh was not found.")
