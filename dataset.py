@@ -3,20 +3,30 @@ import os
 from mesh import Mesh
 
 class Dataset:
-    def __init__(self,  folder_name_dataset, write_csv=False):
+    def __init__(self,  folder_name_dataset, write_basic_csv=False, write_AABB=False):
         self.folder_name_dataset = folder_name_dataset
         self.meshes_file_paths = self.get_all_meshes_file_paths()
         self.meshes = self.make_all_meshes()
-        if write_csv:
-            self.write_csv()
+        if write_basic_csv:
+            self.write_basic_info_csv()
+        if write_AABB:
+            self.write_bounding_box_csv()
 
 
-    def write_csv(self):
+    def write_basic_info_csv(self):
         with open(os.getcwd() + "/basic_mesh_info.csv", "w") as conn:
             writer = csv.writer(conn)
             writer.writerow(["mesh_name", "category", "n_vertices", "n_faces"])
             for mesh in self.meshes:
                 writer.writerow(mesh.basic_mesh_info())
+
+
+    def write_bounding_box_csv(self):
+        with open(os.getcwd() + "/bounding_box.csv", "w") as conn:
+            writer = csv.writer(conn)
+            writer.writerow(["mesh name"] + ["corner{0}{1}".format(i, j) for i in range(1,9) for j in ["x", "y", "z"]])
+            for mesh in self.meshes:
+                writer.writerow([mesh.name] + list(mesh.get_AABB().flatten()))
 
 
     def __iter__(self):
@@ -30,10 +40,6 @@ class Dataset:
     def make_all_meshes(self):
         """ Returns an iterator with all meshes """
         for mesh_file_path in self.meshes_file_paths:
-
-            #with open(mesh_file_path):
-
-
             mesh = Mesh(mesh_file_path)
             yield mesh
 
