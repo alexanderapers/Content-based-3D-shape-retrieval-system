@@ -8,6 +8,7 @@ class Mesh:
         self.mesh = trimesh.load(mesh_file_path)
         self.n_vertices = self.mesh.vertices.shape[0]
         self.n_faces = self.mesh.faces.shape[0]
+        self.bounding_box = trimesh.bounds.corners(self.mesh.bounds)
 
 
     def show(self):
@@ -20,3 +21,7 @@ class Mesh:
 
     def basic_mesh_info(self):
         return [self.name, self.category, self.n_vertices, self.n_faces]
+
+
+    def get_AABB(self):
+        return self.bounding_box
