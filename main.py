@@ -20,7 +20,24 @@ def get_all_meshes():
                     yield file_path
 
 
+def get_info_meshes():
+    with open("basic_mesh_info.txt", "w") as conn:
+        conn.write("mesh_name class n_vertices n_faces\n")
+        for mesh_file_path in get_all_meshes():
+            name = mesh_file_path.split("/")[-1]
+            c = mesh_file_path.split("/")[-2]
+            mesh = trimesh.load(mesh_file_path)
+            n_vertices = mesh.vertices.shape[0]
+            n_faces = mesh.faces.shape[0]
+            if mesh.faces.shape[1] != 3:
+                print("We have some non-triangular meshes")
+
+            conn.write("{0} {1} {2} {3}\n".format(name, c, n_vertices, n_faces))
+
+
 if __name__ == "__main__":
+    # to write basic mesh info to a txt file
+    #get_info_meshes()
 
     if len(sys.argv) == 2:
         show_mesh(sys.argv[1])
