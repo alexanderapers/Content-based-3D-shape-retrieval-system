@@ -8,7 +8,8 @@ from trimesh.exchange import export
 # -> just drag the mesh info csv onto this file to make it do things
 csvfilepath = sys.argv[1]
 
-minVerts = int(input("Please specify a minimum vertex goal: ") or "1000") # default values arbitrarily chosen
+# Default values chosen semi-arbitrarily. Can be changed at program startup or if our remeshing isn't well-liked.
+minVerts = int(input("Please specify a minimum vertex goal: ") or "1000") 
 minFaces = int(input("Please specify a minimum faces goal: ") or "1600")
 
 # safety reasons
@@ -46,7 +47,7 @@ with open(csvfilepath, newline='') as csvfile:
             # mmmm printing
             print("Mesh subdivided! New # of vertices: " + str(mesh.vertices.shape[0]) + ", faces: " + str(mesh.faces.shape[0]))
 
-            # don't break shit unless you're 100% sure
+            # don't overwrite shit unless you're 100% sure
             if not overwriteSave:
                 meshfile = "[SUBDIVIDED]" + meshfile
 
