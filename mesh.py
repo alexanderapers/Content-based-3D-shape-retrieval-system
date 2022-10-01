@@ -10,6 +10,9 @@ class Mesh:
         self.n_vertices = self.get_n_vertices()
         self.n_faces = self.get_n_faces()
         self.bounding_box = trimesh.bounds.corners(self.mesh.bounds)
+        self.centroid = self.mesh.centroid
+        self.d_centroid_origin = self.get_distance_centroid_origin()
+        self.scale = self.get_scale()
 
 
     def show(self):
@@ -21,7 +24,7 @@ class Mesh:
 
 
     def basic_mesh_info(self):
-        return [self.name, self.category, self.n_vertices, self.n_faces]
+        return [self.name, self.category, self.n_vertices, self.n_faces, self.d_centroid_origin]
 
 
     def get_AABB(self):
@@ -50,3 +53,17 @@ class Mesh:
 
     def export(self, file_path):
         export_mesh(self.mesh, file_path, self.name.split(".")[-1])
+
+
+    def get_distance_centroid_origin(self):
+        return sum(self.centroid * self.centroid) ** 0.5
+
+
+    def get_scale(self):
+        # assert self.bounding_box[0][0] != self.bounding_box[6][0]
+        # assert self.bounding_box[0][1] != self.bounding_box[6][1]
+        # assert self.bounding_box[0][2] != self.bounding_box[6][2]
+        #
+        # return sum((self.bounding_box[6] - self.bounding_box[0]) ** 2) ** 0.5
+        #raise notImplementedError()
+        return None

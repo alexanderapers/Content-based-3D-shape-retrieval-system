@@ -16,7 +16,7 @@ class Dataset:
     def write_basic_info_csv(self):
         with open(os.getcwd() + "/" + self.folder_name_dataset + "_basic_mesh_info.csv", "w") as conn:
             writer = csv.writer(conn)
-            writer.writerow(["mesh_name", "category", "n_vertices", "n_faces"])
+            writer.writerow(["mesh_name", "category", "n_vertices", "n_faces", "d_centroid_origin"])
             for mesh in self.meshes:
                 writer.writerow(mesh.basic_mesh_info())
 
