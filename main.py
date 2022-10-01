@@ -5,11 +5,11 @@ from resample import resample
 
 
 if __name__ == "__main__":
-    dataset_original = Dataset("Princeton", write_basic_csv = True, write_AABB = False)
+    dataset_original = Dataset("Princeton", write_basic_csv = False, write_AABB = False)
 
     #resample(dataset_original)
 
-    dataset = Dataset("Princeton_normalized", write_basic_csv = True, write_AABB = False)
+    dataset = Dataset("Princeton_normalized", write_basic_csv = False, write_AABB = False)
 
     if len(sys.argv) == 2:
         dataset.show_mesh(sys.argv[1])
