@@ -3,7 +3,7 @@ import os
 from mesh import Mesh
 
 class Dataset:
-    def __init__(self,  folder_name_dataset, write_basic_csv=False, write_AABB=False):
+    def __init__(self, folder_name_dataset, write_basic_csv=False, write_AABB=False):
         self.folder_name_dataset = folder_name_dataset
         self.meshes_file_paths = self.get_all_meshes_file_paths()
         self.meshes = self.make_all_meshes()
@@ -14,7 +14,7 @@ class Dataset:
 
 
     def write_basic_info_csv(self):
-        with open(os.getcwd() + "/basic_mesh_info.csv", "w") as conn:
+        with open(os.getcwd() + "/" + self.folder_name_dataset + "_basic_mesh_info.csv", "w") as conn:
             writer = csv.writer(conn)
             writer.writerow(["mesh_name", "category", "n_vertices", "n_faces"])
             for mesh in self.meshes:
@@ -22,7 +22,7 @@ class Dataset:
 
 
     def write_bounding_box_csv(self):
-        with open(os.getcwd() + "/bounding_box.csv", "w") as conn:
+        with open(os.getcwd() + "/" + self.folder_name_dataset + "_bounding_box.csv", "w") as conn:
             writer = csv.writer(conn)
             writer.writerow(["mesh name"] + ["corner{0}{1}".format(i, j) for i in range(1,9) for j in ["x", "y", "z"]])
             for mesh in self.meshes:
