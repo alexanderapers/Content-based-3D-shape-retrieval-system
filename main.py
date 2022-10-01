@@ -5,7 +5,7 @@ from resample import resample
 
 
 if __name__ == "__main__":
-    dataset_original = Dataset("Princeton", write_basic_csv = False, write_AABB = False)
+    #dataset_original = Dataset("Princeton", write_basic_csv = False, write_AABB = False)
 
     #resample(dataset_original)
 
