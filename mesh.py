@@ -42,6 +42,17 @@ class Mesh:
         self.n_vertices = self.get_n_vertices()
         self.n_faces = self.get_n_faces()
 
+    def apply_transform(self, matrix):
+        self.mesh.apply_transform(matrix)
+        self.bounding_box = trimesh.bounds.corners(self.mesh.bounds)
+        self.centroid = self.mesh.centroid
+        self.d_centroid_origin = self.get_distance_centroid_origin()
+
+    def normalize_scale(self):
+        self.mesh.apply_scale(1.0 / self.mesh.extents)
+        self.bounding_box = trimesh.bounds.corners(self.mesh.bounds)
+        self.centroid = self.mesh.centroid
+        self.d_centroid_origin = self.get_distance_centroid_origin()
 
     def get_n_vertices(self):
         return self.mesh.vertices.shape[0]
