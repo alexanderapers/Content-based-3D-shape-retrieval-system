@@ -24,6 +24,6 @@ centroid_origin = df['d_centroid_origin']
 plt.hist(centroid_origin, bins=10)
 plt.xlabel('translation')
 plt.ylabel('frequency')
-plt.title("Translation distribution before normalization")
+plt.title("Translation distribution after normalization")
 
 plt.show()
