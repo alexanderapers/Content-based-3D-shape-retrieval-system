@@ -1,5 +1,7 @@
 import trimesh
 from trimesh.exchange.export import export_mesh
+from trimesh.repair import fix_inversion
+import numpy as np
 
 class Mesh:
     def __init__(self, mesh_file_path):
@@ -10,7 +12,6 @@ class Mesh:
         self.n_vertices = self.get_n_vertices()
         self.n_faces = self.get_n_faces()
         self.bounding_box = trimesh.bounds.corners(self.mesh.bounds)
-        self.bounding_box_oriented = trimesh.bounds.oriented_bounds(self.mesh)
         self.centroid = self.mesh.centroid
         self.d_centroid_origin = self.get_distance_centroid_origin()
         self.scale = self.get_scale()
@@ -46,19 +47,31 @@ class Mesh:
     def apply_transform(self, matrix):
         self.mesh.apply_transform(matrix)
         self.bounding_box = trimesh.bounds.corners(self.mesh.bounds)
-        self.bounding_box_oriented = trimesh.bounds.oriented_bounds(self.mesh)
+        self.centroid = self.mesh.centroid
+        self.d_centroid_origin = self.get_distance_centroid_origin()
+
+    def transform_vertices(self, matrix):
+        new_vertices = []
+        for v in self.mesh.vertices:
+            new_vertices.append(np.dot(matrix, v))
+
+        self.mesh = trimesh.base.Trimesh(vertices = new_vertices, faces = self.mesh.faces)
+        fix_inversion(self.mesh)
+        self.bounding_box = trimesh.bounds.corners(self.mesh.bounds)
         self.centroid = self.mesh.centroid
         self.d_centroid_origin = self.get_distance_centroid_origin()
 
     def normalize_scale(self):
         self.mesh.apply_scale(1.0 / max(self.mesh.extents))
         self.bounding_box = trimesh.bounds.corners(self.mesh.bounds)
-        self.bounding_box_oriented = trimesh.bounds.oriented_bounds(self.mesh)
         self.centroid = self.mesh.centroid
         self.d_centroid_origin = self.get_distance_centroid_origin()
 
     def get_n_vertices(self):
         return self.mesh.vertices.shape[0]
+
+    def get_vertices(self):
+        return self.mesh.vertices
 
 
     def get_n_faces(self):

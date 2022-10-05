@@ -2,7 +2,7 @@
 import sys
 from dataset import Dataset
 from resample import resample
-from cubenormalize import normalize
+from normalize import normalize
 
 
 if __name__ == "__main__":
