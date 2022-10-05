@@ -11,7 +11,7 @@ df = pd.read_csv('Princeton_normalized_basic_mesh_info.csv')
 # plt.ylabel('frequency')
 # plt.title("Distribution of number of vertices")
 
-#vertices histogram
+#faces histogram
 # faces = df['n_faces']
 # plt.hist(faces, bins=100)
 # plt.xlabel('num_faces')
@@ -19,11 +19,16 @@ df = pd.read_csv('Princeton_normalized_basic_mesh_info.csv')
 # plt.title("Distribution of number of faces")
 
 
-#after translation histogram
+#centroid before translation histogram
 centroid_origin = df['d_centroid_origin']
-plt.hist(centroid_origin, bins=10)
-plt.xlabel('translation')
+plt.hist(centroid_origin[centroid_origin < 2], bins=15)
+plt.xlabel('distance cebtroid to origin')
 plt.ylabel('frequency')
-plt.title("Translation distribution after normalization")
+#plt.xlim(xmin=0, xmax = 1)
+#plt.ylim(ymin=1, ymax = 0)
+plt.title("Translation distribution before normalization")
+
+#print(centroid_origin)
+
 
 plt.show()
