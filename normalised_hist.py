@@ -19,7 +19,7 @@ df = pd.read_csv('Princeton_normalized_basic_mesh_info.csv')
 # plt.title("Distribution of number of faces")
 
 
-#translation before histogram
+#after translation histogram
 centroid_origin = df['d_centroid_origin']
 plt.hist(centroid_origin, bins=10)
 plt.xlabel('translation')
