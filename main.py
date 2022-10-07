@@ -5,13 +5,14 @@ from resample import resample
 from normalize import normalize
 
 if __name__ == "__main__":
-    dataset_original = Dataset("Princeton", write_basic_csv = True, write_AABB = False)
-
+    dataset_original = Dataset("Princeton", write_basic_csv = True, write_AABB = True)
     resample(dataset_original)
-
-    dataset = Dataset("Princeton_normalized", write_basic_csv = True, write_AABB = False)
+    dataset = Dataset("Princeton_normalized", write_basic_csv = False, write_AABB = False)
 
     normalize(dataset)
+    dataset.write_basic_info_csv()
+    dataset.write_bounding_box_csv()
+
 
     if len(sys.argv) == 2:
         dataset.show_mesh(sys.argv[1])

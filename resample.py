@@ -20,12 +20,9 @@ from dataset import Dataset
 #
 
 def resample(dataset):
-
-
     new_name = dataset.folder_name_dataset + "_normalized"
     if not os.path.exists(new_name):
         os.mkdir(new_name)
-
         # Default values chosen semi-arbitrarily. Can be changed at program startup or if our remeshing isn't well-liked.
         minVerts = int(input("Please specify a minimum vertex goal: ") or "3000")
         minFaces = int(input("Please specify a minimum faces goal: ") or "4800")
