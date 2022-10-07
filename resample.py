@@ -20,29 +20,31 @@ from dataset import Dataset
 #
 
 def resample(dataset):
-    # Default values chosen semi-arbitrarily. Can be changed at program startup or if our remeshing isn't well-liked.
-    minVerts = int(input("Please specify a minimum vertex goal: ") or "3000")
-    minFaces = int(input("Please specify a minimum faces goal: ") or "4800")
+
 
     new_name = dataset.folder_name_dataset + "_normalized"
     if not os.path.exists(new_name):
         os.mkdir(new_name)
 
-    for mesh in dataset:
-        if mesh.n_vertices <= minVerts or mesh.n_faces <= minFaces:
-            #print("Outlier found:", mesh.name)
-            while mesh.n_vertices < minVerts or mesh.n_faces < minFaces:
-                mesh.subdivide()
+        # Default values chosen semi-arbitrarily. Can be changed at program startup or if our remeshing isn't well-liked.
+        minVerts = int(input("Please specify a minimum vertex goal: ") or "3000")
+        minFaces = int(input("Please specify a minimum faces goal: ") or "4800")
 
-        if mesh.n_vertices >= 5000 or mesh.n_faces >= 8000:
-            mesh.decimation()
+        for mesh in dataset:
+            if mesh.n_vertices <= minVerts or mesh.n_faces <= minFaces:
+                #print("Outlier found:", mesh.name)
+                while mesh.n_vertices < minVerts or mesh.n_faces < minFaces:
+                    mesh.subdivide()
 
-        print("Mesh remeshed! New # of vertices: " + str(mesh.n_vertices) + ", faces: " + str(mesh.n_faces))
+            if mesh.n_vertices >= 5000 or mesh.n_faces >= 8000:
+                mesh.decimation()
 
-        if not os.path.exists(join(new_name, mesh.category)):
-            os.mkdir(join(new_name, mesh.category))
+            print("Mesh remeshed! New # of vertices: " + str(mesh.n_vertices) + ", faces: " + str(mesh.n_faces))
 
-        mesh.export(join(join(new_name, mesh.category), mesh.name))
+            if not os.path.exists(join(new_name, mesh.category)):
+                os.mkdir(join(new_name, mesh.category))
+
+            mesh.export(join(join(new_name, mesh.category), mesh.name))
 #
 # with open(csvfilepath, newline='') as csvfile:
 #     reader = csv.reader(csvfile)

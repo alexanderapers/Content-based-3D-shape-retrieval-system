@@ -2,7 +2,7 @@ import trimesh
 from trimesh.exchange.export import export_mesh
 from trimesh.repair import fix_inversion
 import numpy as np
-import open3d as o3d
+#import open3d as o3d
 
 class Mesh:
     def __init__(self, mesh_file_path):
