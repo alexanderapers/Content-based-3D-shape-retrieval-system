@@ -68,3 +68,4 @@ def normalize(dataset, debug=False):
 
     print("Done normalising meshes! Press ENTER to continue.")
     input()
+
