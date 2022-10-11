@@ -3,14 +3,15 @@ import os
 from mesh import Mesh
 
 class Dataset:
-    def __init__(self, folder_name_dataset, write_basic_csv=False, write_AABB=False):
+    def __init__(self, folder_name_dataset, write_basic_csv=False, write_other_csv=False):
         self.folder_name_dataset = folder_name_dataset
         #self.meshes_file_paths = self.get_all_meshes_file_paths()
         #self.meshes = self.make_all_meshes()
         if write_basic_csv:
             self.write_basic_info_csv()
-        if write_AABB:
+        if write_other_csv:
             self.write_bounding_box_csv()
+            self.write_alignment_csv()
 
 
     def write_basic_info_csv(self):
@@ -27,6 +28,14 @@ class Dataset:
             writer.writerow(["mesh name"] + ["corner{0}{1}".format(i, j) for i in range(1,9) for j in ["x", "y", "z"]])
             for mesh in self.make_all_meshes():
                 writer.writerow([mesh.name] + list(mesh.get_AABB().flatten()))
+
+
+    def write_alignment_csv(self):
+        with open(os.getcwd() + "/csv/" + self.folder_name_dataset + "_alignment.csv", "w") as conn:
+            writer = csv.writer(conn)
+            writer.writerow(["mesh name", "alignment_x", "alignment_y", "alignment_y"])
+            for mesh in self.make_all_meshes():
+                writer.writerow([mesh.name] + list(mesh.get_alignment()))
 
 
     def __iter__(self):

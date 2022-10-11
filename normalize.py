@@ -56,14 +56,14 @@ def normalize(dataset, debug=False):
         sorted_eigenvectors_homo = np.hstack([np.vstack([sorted_eigenvectors, np.array([0,0,0])]), np.array([[0],[0],[0],[1]])])
         mesh.apply_transform(sorted_eigenvectors_homo)
 
-            # put them in an array...
-            ordered_eigenvectors = [eigenvectors[:,newXindex], eigenvectors[:,newYindex], thirdVector]
-
-            # and transform!
-            mesh.transform_vertices(ordered_eigenvectors)
-
-            # now that the mesh is centered on origin and aligned, we can scale it such that its max diameter is 1.
-            mesh.normalize_scale()
+            # # put them in an array...
+            # ordered_eigenvectors = [eigenvectors[:,newXindex], eigenvectors[:,newYindex], thirdVector]
+            #
+            # # and transform!
+            # mesh.transform_vertices(ordered_eigenvectors)
+            #
+            # # now that the mesh is centered on origin and aligned, we can scale it such that its max diameter is 1.
+            # mesh.normalize_scale()
 
 
 

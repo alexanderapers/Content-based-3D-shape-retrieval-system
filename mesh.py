@@ -15,6 +15,7 @@ class Mesh:
         self.bounding_box = trimesh.bounds.corners(self.mesh.bounds)
         self.centroid = self.mesh.centroid
         self.d_centroid_origin = self.get_distance_centroid_origin()
+        self.alignment = self.get_alignment()
         #self.scale = self.get_scale()
 
 
@@ -103,3 +104,11 @@ class Mesh:
         #     print(sorted_eigenvectors)
         #     return False
         return True
+
+
+    def get_alignment(self):
+        covariance = np.cov(np.transpose(self.get_vertices()))
+        eigenvalues, eigenvectors = np.linalg.eig(covariance)
+        idx = eigenvalues.argsort()[::-1]
+        sorted_eigenvectors = eigenvectors[:,idx]
+        return np.absolute(np.diagonal(sorted_eigenvectors))
