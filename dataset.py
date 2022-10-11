@@ -1,6 +1,7 @@
 import csv
 import os
 from mesh import Mesh
+import numpy as np
 
 class Dataset:
     def __init__(self, folder_name_dataset, write_basic_csv=False, write_other_csv=False):
@@ -38,9 +39,28 @@ class Dataset:
                 writer.writerow([mesh.name] + list(mesh.get_alignment()))
 
 
+    # def write_face_area_csv(self):
+    #     with open(os.getcwd() + "/csv/" + self.folder_name_dataset + "_face_area.csv", "w") as conn:
+    #         writer = csv.writer(conn)
+    #         writer.writerow(["mesh name", "face", "area"])
+    #         for mesh in self.make_all_meshes():
+    #             for i, face_area in enumerate(mesh.get_face_areas()):
+    #                 writer.writerow([mesh.name, i, face_area])
+
+    def get_face_areas(self, bins):
+        A = np.zeros(shape = len(bins)-1)
+        for mesh in self.make_all_meshes():
+            A += mesh.get_face_areas(bins)
+        return A / np.sum(A)
+
+
     def __iter__(self):
         #return self.meshes
         return self.make_all_meshes()
+
+
+    def __len__(self):
+        return len(list(self.get_all_meshes_file_paths()))
 
 
     def to_list(self):

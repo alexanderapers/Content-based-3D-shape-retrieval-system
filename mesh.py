@@ -112,3 +112,7 @@ class Mesh:
         idx = eigenvalues.argsort()[::-1]
         sorted_eigenvectors = eigenvectors[:,idx]
         return np.absolute(np.diagonal(sorted_eigenvectors))
+
+
+    def get_face_areas(self, bins):
+        return np.histogram(self.mesh.area_faces, bins)[0]
