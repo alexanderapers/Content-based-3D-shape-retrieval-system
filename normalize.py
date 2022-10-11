@@ -31,20 +31,27 @@ def normalize(dataset, debug=False):
         # Calculate covariance and eigenvectors...
         covariance = np.cov(np.transpose(mesh.get_vertices()))
         eigenvalues, eigenvectors = np.linalg.eig(covariance)
-        
-        # Determine which eigenvector is largest...
-        newXindex = int(np.where(eigenvalues == max(eigenvalues))[0][0]) #oh my god this feels illegal
-        newZindex = int(np.where(eigenvalues == min(eigenvalues))[0][0])
-        newYindex = 3 - (newXindex + newZindex) # sum of indices is 3
 
-        # construct third vector by cross product of x and y...
-        thirdVector = np.cross(eigenvectors[:,newXindex], eigenvectors[:,newYindex])
-
-        # put them in an array...
-        ordered_eigenvectors = [eigenvectors[:,newXindex], eigenvectors[:,newYindex], thirdVector]
+        idx = eigenvalues.argsort()[::-1]
+        sorted_eigenvectors = eigenvectors[:,idx]
+        sorted_eigenvectors[:, 2] = np.cross(sorted_eigenvectors[:, 0], sorted_eigenvectors[:, 1])
+        sorted_eigenvectors = sorted_eigenvectors.T
+        # # Determine which eigenvector is largest...
+        # #newXindex = int(np.where(eigenvalues == max(eigenvalues))[0][0]) #oh my god this feels illegal
+        # #newZindex = int(np.where(eigenvalues == min(eigenvalues))[0][0])
+        # #newYindex = 3 - (newXindex + newZindex) # sum of indices is 3
+        # ordering = np.argsort(-eigenvalues)
+        #
+        # # construct third vector by cross product of x and y...
+        # thirdVector = np.cross(eigenvectors[:,ordering[0]], eigenvectors[:,ordering[1]])
+        #
+        # # put them in an array...
+        # ordered_eigenvectors = np.array([eigenvectors[:,ordering[0]], eigenvectors[:,ordering[1]]])
 
         # and transform!
-        mesh.transform_vertices(ordered_eigenvectors)
+        #mesh.transform_vertices(sorted_eigenvectors
+        sorted_eigenvectors_homo = np.hstack([np.vstack([sorted_eigenvectors, np.array([0,0,0])]), np.array([[0],[0],[0],[1]])])
+        mesh.apply_transform(sorted_eigenvectors_homo)
 
         # now that the mesh is centered on origin and aligned, we can scale it such that its max diameter is 1.
         mesh.normalize_scale()
@@ -68,4 +75,3 @@ def normalize(dataset, debug=False):
 
     print("Done normalising meshes! Press ENTER to continue.")
     input()
-

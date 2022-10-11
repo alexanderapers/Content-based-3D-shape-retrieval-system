@@ -71,3 +71,10 @@ class Dataset:
                 Mesh(mesh_file_path).show()
         if not found:
             raise Exception("This mesh was not found.")
+
+
+    def is_normalised(self):
+        for mesh in self.make_all_meshes():
+            if not mesh.is_normalised():
+                return False
+        return True
