@@ -39,18 +39,19 @@ class Dataset:
                 writer.writerow([mesh.name] + list(mesh.get_alignment()))
 
 
-    # def write_face_area_csv(self):
-    #     with open(os.getcwd() + "/csv/" + self.folder_name_dataset + "_face_area.csv", "w") as conn:
-    #         writer = csv.writer(conn)
-    #         writer.writerow(["mesh name", "face", "area"])
-    #         for mesh in self.make_all_meshes():
-    #             for i, face_area in enumerate(mesh.get_face_areas()):
-    #                 writer.writerow([mesh.name, i, face_area])
+    def write_face_area_csv(self):
+        with open(os.getcwd() + "/csv/" + self.folder_name_dataset + "_face_area.csv", "w") as conn:
+            writer = csv.writer(conn)
+            writer.writerow(["mesh name", "face", "area"])
+            for mesh in self.make_all_meshes():
+                for i, face_area in enumerate(mesh.get_face_areas()):
+                    writer.writerow([mesh.name, i, face_area])
 
-    def get_face_areas(self, bins):
+
+    def get_face_areas_in_bins(self, bins):
         A = np.zeros(shape = len(bins)-1)
         for mesh in self.make_all_meshes():
-            A += mesh.get_face_areas(bins)
+            A += mesh.get_face_areas_in_bins(bins)
         return A / np.sum(A)
 
 

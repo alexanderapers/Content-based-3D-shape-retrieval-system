@@ -13,8 +13,10 @@ if __name__ == "__main__":
 
     dataset = Dataset("Princeton_normalized", write_basic_csv = False, write_other_csv = False)
 
-    # A = dataset_original.get_face_areas(bins = np.arange(0, 5.5e-4, 5.5e-5))
-    # B = dataset.get_face_areas(bins = np.arange(0, 5.5e-4, 5.5e-5))
+    dataset_original.write_face_area_csv()
+    dataset.write_face_area_csv()
+    # A = dataset_original.get_face_areas_in_bins(bins = np.arange(0, 5.5e-4, 5.5e-5))
+    # B = dataset.get_face_areas_in_bins(bins = np.arange(0, 5.5e-4, 5.5e-5))
     # plt.bar(np.arange(0, 4.95e-4, 5.5e-5), A, width=5.5e-5/2)
     # plt.savefig("test")
     #

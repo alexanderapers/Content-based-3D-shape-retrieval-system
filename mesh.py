@@ -65,6 +65,7 @@ class Mesh:
 
     def normalize_scale(self):
         self.mesh.apply_scale(1.0 / max(self.mesh.extents))
+        #print(1.0/max(self.mesh.extents))
         self.bounding_box = trimesh.bounds.corners(self.mesh.bounds)
         self.centroid = self.mesh.centroid
         self.d_centroid_origin = self.get_distance_centroid_origin()
@@ -114,5 +115,9 @@ class Mesh:
         return np.absolute(np.diagonal(sorted_eigenvectors))
 
 
-    def get_face_areas(self, bins):
+    def get_face_areas_in_bins(self, bins):
         return np.histogram(self.mesh.area_faces, bins)[0]
+
+
+    def get_face_areas(self):
+        return self.mesh.area_faces

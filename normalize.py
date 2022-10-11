@@ -69,7 +69,7 @@ def normalize(dataset, debug=False):
 
         print("Bounding box after alignment and scaling:\n" + str(mesh.get_AABB()))
 
-        if show_interims and USE_EIGENS:
+        if show_interims: #and USE_EIGENS:
             print("==> eigenvalues for (x, y, z)")
             print(eigenvalues)
             print("\n==> eigenvectors")
