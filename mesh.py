@@ -53,7 +53,7 @@ class Mesh:
 
 
     def decimation(self):
-        self.mesh = self.mesh.simplify_quadratic_decimation(6400)
+        self.mesh = self.mesh.simplify_quadratic_decimation(3500)
         self.centroid = self.mesh.centroid
         self.d_centroid_origin = self.get_distance_centroid_origin()
         self.n_vertices = self.get_n_vertices()
