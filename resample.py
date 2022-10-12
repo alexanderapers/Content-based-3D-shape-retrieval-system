@@ -24,17 +24,21 @@ def resample(dataset):
     if not os.path.exists(new_name):
         os.mkdir(new_name)
         # Default values chosen semi-arbitrarily. Can be changed at program startup or if our remeshing isn't well-liked.
-        minVerts = int(input("Please specify a minimum vertex goal: ") or "3000")
-        minFaces = int(input("Please specify a minimum faces goal: ") or "4800")
+        #minVerts = int(input("Please specify a minimum vertex goal: ") or "3000")
+        #minFaces = int(input("Please specify a minimum faces goal: ") or "4800")
 
         for mesh in dataset:
-            if mesh.n_vertices <= minVerts or mesh.n_faces <= minFaces:
-                #print("Outlier found:", mesh.name)
-                while mesh.n_vertices < minVerts or mesh.n_faces < minFaces:
-                    mesh.subdivide()
-
-            if mesh.n_vertices >= 5000 or mesh.n_faces >= 8000:
-                mesh.decimation()
+            mesh.subdivide_to_size()
+            while mesh.n_vertices < 1000:
+                mesh.subdivide()
+            mesh.decimation()
+            # if mesh.n_vertices <= minVerts or mesh.n_faces <= minFaces:
+            #     #print("Outlier found:", mesh.name)
+            #     while mesh.n_vertices < minVerts or mesh.n_faces < minFaces:
+            #         mesh.subdivide()
+            #
+            # if mesh.n_vertices >= 5000 or mesh.n_faces >= 8000:
+            #     mesh.decimation()
 
             print("Mesh remeshed! New # of vertices: " + str(mesh.n_vertices) + ", faces: " + str(mesh.n_faces))
 

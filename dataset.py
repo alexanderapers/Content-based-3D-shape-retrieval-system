@@ -42,10 +42,10 @@ class Dataset:
     def write_face_area_csv(self):
         with open(os.getcwd() + "/csv/" + self.folder_name_dataset + "_face_area.csv", "w") as conn:
             writer = csv.writer(conn)
-            writer.writerow(["mesh name", "face", "area"])
+            writer.writerow(["area"])
             for mesh in self.make_all_meshes():
-                for i, face_area in enumerate(mesh.get_face_areas()):
-                    writer.writerow([mesh.name, i, face_area])
+                for face_area in mesh.get_face_areas():
+                    writer.writerow([face_area])
 
 
     def get_face_areas_in_bins(self, bins):

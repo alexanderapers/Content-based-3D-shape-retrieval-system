@@ -37,14 +37,28 @@ class Mesh:
 
     def subdivide(self):
         self.mesh = self.mesh.subdivide()
+        self.centroid = self.mesh.centroid
+        self.d_centroid_origin = self.get_distance_centroid_origin()
+        self.n_vertices = self.get_n_vertices()
+        self.n_faces = self.get_n_faces()
+
+
+    def subdivide_to_size(self):
+        self.mesh = self.mesh.subdivide_to_size(np.sum(self.mesh.extents ** 2), max_iter=1000)
+        #self.mesh = trimesh.base.Trimesh(vertices = vertices, faces = new_faces)
+        self.centroid = self.mesh.centroid
+        self.d_centroid_origin = self.get_distance_centroid_origin()
         self.n_vertices = self.get_n_vertices()
         self.n_faces = self.get_n_faces()
 
 
     def decimation(self):
         self.mesh = self.mesh.simplify_quadratic_decimation(6400)
+        self.centroid = self.mesh.centroid
+        self.d_centroid_origin = self.get_distance_centroid_origin()
         self.n_vertices = self.get_n_vertices()
         self.n_faces = self.get_n_faces()
+
 
     def apply_transform(self, matrix):
         self.mesh.apply_transform(matrix)
