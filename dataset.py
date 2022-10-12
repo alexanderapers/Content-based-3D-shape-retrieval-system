@@ -109,10 +109,13 @@ class Dataset:
 
 
     def is_normalised(self):
-        print("Checking if {} is normalized".format(self.folder_name_dataset))
-        for mesh in self.make_all_meshes():
-            if not mesh.is_normalised():
-                return False
+        if not os.path.isfile("{}/yes_normalized.txt".format(self.folder_name_dataset)):
+            for mesh in self.make_all_meshes():
+                if not mesh.is_normalised():
+                    return False
+            with open("{}/yes_normalized.txt".format(self.folder_name_dataset), "w") as conn:
+                conn.write("this has been normalized")
+            return True
         return True
 
 

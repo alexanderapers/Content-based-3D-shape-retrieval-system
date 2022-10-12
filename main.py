@@ -14,11 +14,7 @@ if __name__ == "__main__":
     # takes a while to run and makes big files
     #face_area_plots.plot_face_area(dataset_original, dataset_remeshed)
 
-    # for mesh in dataset_remeshed_normalized:
-    #     mesh.normalize_flipping()
-    #     break
-
-    if len(sys.argv) == 2:
-        dataset_remeshed_normalized.show_mesh(sys.argv[1])
-    else:
-        dataset_remeshed_normalized.show_mesh("m0.ply")
+    # if len(sys.argv) == 2:
+    #     dataset_remeshed_normalized.show_mesh(sys.argv[1])
+    # else:
+    #     dataset_remeshed_normalized.show_mesh("m0.ply")
