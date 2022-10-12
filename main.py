@@ -1,11 +1,7 @@
 
 import sys
 from dataset import Dataset
-#from resample import resample
-#from normalize import normalize
-#from matplotlib import pyplot as plt
-#import pickle
-#import numpy as np
+import face_area_plots
 
 if __name__ == "__main__":
     dataset_original = Dataset("Princeton", write_basic_csv = False, write_other_csv = False)
@@ -14,6 +10,10 @@ if __name__ == "__main__":
     dataset_remeshed_normalized = Dataset("Princeton_remeshed_normalized", write_basic_csv = False, write_other_csv = False)
     dataset_remeshed_normalized.resample()
     dataset_remeshed_normalized.normalize()
+
+    # takes a while to run and makes big files
+    #face_area_plots.plot_face_area(dataset_original, dataset_remeshed)
+
 
 
 
