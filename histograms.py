@@ -68,8 +68,13 @@ def maxDist(row):
 
 maxDist(A[0])
 maxDists = [maxDist(row) for row in A]
+<<<<<<< HEAD
 plt.hist(np.log(maxDists), bins=64)
 plt.xlabel('length of diagonal of bounding box')
+=======
+plt.hist(np.log(maxDists), bins=512)
+plt.xlabel('corners')
+>>>>>>> 258ddebf455385252fa561087046ca80b8c0d1c5
 plt.ylabel('frequency')
 plt.title("Scaling distribution before normalization")
 

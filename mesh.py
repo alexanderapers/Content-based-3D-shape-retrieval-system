@@ -15,7 +15,8 @@ class Mesh:
         self.bounding_box = trimesh.bounds.corners(self.mesh.bounds)
         self.centroid = self.mesh.centroid
         self.d_centroid_origin = self.get_distance_centroid_origin()
-        self.scale = self.get_scale()
+        self.alignment = self.get_alignment()
+        #self.scale = self.get_scale()
 
 
     def show(self):
@@ -64,6 +65,7 @@ class Mesh:
 
     def normalize_scale(self):
         self.mesh.apply_scale(1.0 / max(self.mesh.extents))
+        #print(1.0/max(self.mesh.extents))
         self.bounding_box = trimesh.bounds.corners(self.mesh.bounds)
         self.centroid = self.mesh.centroid
         self.d_centroid_origin = self.get_distance_centroid_origin()
@@ -87,11 +89,35 @@ class Mesh:
         return sum(self.centroid * self.centroid) ** 0.5
 
 
-    def get_scale(self):
-        # assert self.bounding_box[0][0] != self.bounding_box[6][0]
-        # assert self.bounding_box[0][1] != self.bounding_box[6][1]
-        # assert self.bounding_box[0][2] != self.bounding_box[6][2]
-        #
-        # return sum((self.bounding_box[6] - self.bounding_box[0]) ** 2) ** 0.5
-        #raise notImplementedError()
-        return None
+    def is_normalised(self):
+        if self.d_centroid_origin > 1e-3:
+            print("mesh is not centered")
+            return False
+        if (np.max(self.mesh.extents) - 1) ** 2 > 1e-3:
+            print("mesh is not unit scaled")
+            return False
+        # covariance = np.cov(np.transpose(self.get_vertices()))
+        # eigenvalues, eigenvectors = np.linalg.eig(covariance)
+        # idx = eigenvalues.argsort()[::-1]
+        # sorted_eigenvectors = eigenvectors[:,idx]
+        # if np.sum(np.diagonal(sorted_eigenvectors) ** 2) - 3 > 1e-3:
+        #     print(self.name + " one of the diagonals is not parallel to axes")
+        #     print(sorted_eigenvectors)
+        #     return False
+        return True
+
+
+    def get_alignment(self):
+        covariance = np.cov(np.transpose(self.get_vertices()))
+        eigenvalues, eigenvectors = np.linalg.eig(covariance)
+        idx = eigenvalues.argsort()[::-1]
+        sorted_eigenvectors = eigenvectors[:,idx]
+        return np.absolute(np.diagonal(sorted_eigenvectors))
+
+
+    def get_face_areas_in_bins(self, bins):
+        return np.histogram(self.mesh.area_faces, bins)[0]
+
+
+    def get_face_areas(self):
+        return self.mesh.area_faces
