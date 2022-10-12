@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pylab as pl
 
-#print(df)
+#vertices histogram
 
 # df = pd.read_csv('csv/Princeton_basic_mesh_info.csv')
 # vertices = df['n_vertices']
@@ -12,20 +12,29 @@ import pylab as pl
 # plt.xlabel('num_vertices')
 # plt.ylabel('frequency')
 # plt.title("Distribution of number of vertices")
+# plt.show()
+
 
 #category histogram
+# df = pd.read_csv('csv/Princeton_basic_mesh_info.csv')
 # df2 = df['category'].value_counts().plot(kind ='barh')
 # plt.ylabel('category')
 # plt.xlabel('frequency')
 # plt.title("Distribution by category")
+# plt.savefig("resample_plots/categories")
+# plt.show()
 
 #faces histogram
+# df = pd.read_csv('csv/Princeton_basic_mesh_info.csv')
 # faces = df['n_faces']
 # faces = [x for x in faces if x <= 20000]
 # plt.hist(faces, bins=80)
 # plt.xlabel('num_faces')
 # plt.ylabel('frequency')
 # plt.title("Distribution of number of faces")
+# plt.show()
+
+
 
 #centroid before translation histogram
 # df2 = pd.read_csv('csv/Princeton_basic_mesh_info.csv')
@@ -34,6 +43,8 @@ import pylab as pl
 # plt.xlabel('distance centroid to origin')
 # plt.ylabel('frequency')
 # plt.title("Translation distribution before normalization")
+# plt.savefig("resample_plots/translation_before")
+# plt.show()
 
 #scaling distribution before normalization
 # df3 = pd.read_csv('csv/Princeton_bounding_box.csv')
@@ -71,13 +82,12 @@ import pylab as pl
 # maxDists = [maxDist(row) for row in A]
 # plt.hist(np.log(maxDists), bins=64)
 # plt.xlabel('length of diagonal of bounding box')
-# plt.hist(np.log(maxDists), bins=512)
-# plt.xlabel('corners')
 # plt.ylabel('frequency')
 # plt.title("Scaling distribution before normalization")
-
-
+# plt.savefig("resample_plots/scaling_before")
 # plt.show()
+
+
 
 #alignment distribution before normalization 
 csv_name ="./csv/Princeton_alignment.csv"
@@ -95,15 +105,17 @@ df_raw.hist(column=['alignment_x'])
 plt.suptitle(plt_name, fontsize=fontsize)
 plt.ylabel("frequency")
 plt.xlabel(" x = [1,0,0]")
+plt.savefig("resample_plots/alignment_x_before")
 
 df_raw.hist(column=['alignment_y'])
 plt.suptitle(plt_name, fontsize=fontsize)
 plt.ylabel("frequency")
 plt.xlabel("y = [0,1,0]")
+plt.savefig("resample_plots/alignment_y_before")
 
 df_raw.hist(column=['alignment_z'])
 plt.suptitle(plt_name, fontsize=fontsize)
 plt.ylabel("frequency")
 plt.xlabel("z =  [0,0,1]")
+plt.savefig("resample_plots/alignment_z_before")
 plt.show()
-#plt_histogram(df,csv_file_name)
