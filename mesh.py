@@ -83,6 +83,32 @@ class Mesh:
         self.centroid = self.mesh.centroid
         self.d_centroid_origin = self.get_distance_centroid_origin()
 
+    def normalize_flipping(self):
+        I = np.eye(4)
+        for i in range(3):
+            coords = self.get_vertices()[:,i]
+            flip = np.sign(np.sum(np.sign(coords) * (coords ** 2)))
+            I[i, i] = flip
+        self.apply_transform(I)
+
+    def normalize_translation(self):
+        # First, we set barycenter on origin.
+        transformVector = -self.centroid
+        transformMatrix = trimesh.transformations.translation_matrix(transformVector)
+        self.apply_transform(transformMatrix)
+
+    def normalize_alignment(self):
+        # Calculate covariance and eigenvectors...
+        covariance = np.cov(np.transpose(self.get_vertices()))
+        eigenvalues, eigenvectors = np.linalg.eig(covariance)
+
+        idx = eigenvalues.argsort()[::-1]
+        sorted_eigenvectors = eigenvectors[:,idx]
+        sorted_eigenvectors[:, 2] = np.cross(sorted_eigenvectors[:, 0], sorted_eigenvectors[:, 1])
+        sorted_eigenvectors = sorted_eigenvectors.T
+        sorted_eigenvectors_homo = np.hstack([np.vstack([sorted_eigenvectors, np.array([0,0,0])]), np.array([[0],[0],[0],[1]])])
+        self.apply_transform(sorted_eigenvectors_homo)
+
     def get_n_vertices(self):
         return self.mesh.vertices.shape[0]
 
@@ -117,6 +143,14 @@ class Mesh:
         # if np.sum(np.diagonal(sorted_eigenvectors) ** 2) - 3 > 1e-3:
         #     print(self.name + " one of the diagonals is not parallel to axes")
         #     print(sorted_eigenvectors)
+        #     return False
+        #
+        # I = np.eye(4)
+        # for i in range(3):
+        #     coords = self.get_vertices()[:,i]
+        #     flip = np.sign(np.sum(np.sign(coords) * (coords ** 2)))
+        #     I[i, i] = flip
+        # if not (I == np.eye(4)).any():
         #     return False
         return True
 
