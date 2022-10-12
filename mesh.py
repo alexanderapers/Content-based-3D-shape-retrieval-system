@@ -37,12 +37,25 @@ class Mesh:
 
     def subdivide(self):
         self.mesh = self.mesh.subdivide()
+        self.centroid = self.mesh.centroid
+        self.d_centroid_origin = self.get_distance_centroid_origin()
+        self.n_vertices = self.get_n_vertices()
+        self.n_faces = self.get_n_faces()
+
+
+    def subdivide_to_size(self):
+        self.mesh = self.mesh.subdivide_to_size(np.sum(self.mesh.extents ** 2), max_iter=1000)
+        #self.mesh = trimesh.base.Trimesh(vertices = vertices, faces = new_faces)
+        self.centroid = self.mesh.centroid
+        self.d_centroid_origin = self.get_distance_centroid_origin()
         self.n_vertices = self.get_n_vertices()
         self.n_faces = self.get_n_faces()
 
 
     def decimation(self):
-        self.mesh = self.mesh.simplify_quadratic_decimation(6400)
+        self.mesh = self.mesh.simplify_quadratic_decimation(3500)
+        self.centroid = self.mesh.centroid
+        self.d_centroid_origin = self.get_distance_centroid_origin()
         self.n_vertices = self.get_n_vertices()
         self.n_faces = self.get_n_faces()
 
@@ -95,6 +108,7 @@ class Mesh:
             return False
         if (np.max(self.mesh.extents) - 1) ** 2 > 1e-3:
             print("mesh is not unit scaled")
+            print(np.max(self.mesh.extents))
             return False
         # covariance = np.cov(np.transpose(self.get_vertices()))
         # eigenvalues, eigenvectors = np.linalg.eig(covariance)
