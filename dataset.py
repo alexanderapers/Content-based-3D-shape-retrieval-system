@@ -62,7 +62,6 @@ class Dataset:
 
 
     def __iter__(self):
-        #return self.meshes
         return self.make_all_meshes()
 
 
@@ -145,34 +144,17 @@ class Dataset:
                 print("Progress: " + str(progress).rjust(5) + "/{} (".format(self.__len__()) + str(int(progress/self.__len__() * 100)).rjust(3) + "%)")
                 progress += 1
 
-                # show_interims = False
-                # if random.randint(0,100) == 0 and debug:
-                #     show_interims = True
-                #     mesh.show()
-
                 print(mesh.name)
 
                 print("Original centroid: " + str(mesh.centroid))
-                # First, we set barycenter on origin.
-                transformVector = -mesh.centroid
-                transformMatrix = trimesh.transformations.translation_matrix(transformVector)
-                mesh.apply_transform(transformMatrix)
+                mesh.normalize_translation()
                 print("New centroid:      " + str(mesh.centroid))
 
-                # Calculate covariance and eigenvectors...
-                covariance = np.cov(np.transpose(mesh.get_vertices()))
-                eigenvalues, eigenvectors = np.linalg.eig(covariance)
-
-                idx = eigenvalues.argsort()[::-1]
-                sorted_eigenvectors = eigenvectors[:,idx]
-                sorted_eigenvectors[:, 2] = np.cross(sorted_eigenvectors[:, 0], sorted_eigenvectors[:, 1])
-                sorted_eigenvectors = sorted_eigenvectors.T
-                sorted_eigenvectors_homo = np.hstack([np.vstack([sorted_eigenvectors, np.array([0,0,0])]), np.array([[0],[0],[0],[1]])])
-                mesh.apply_transform(sorted_eigenvectors_homo)
-
+                mesh.normalize_alignment()
                 mesh.normalize_scale()
+                mesh.normalize_flipping()
 
-                print("Bounding box after alignment and scaling:\n" + str(mesh.get_AABB()))
+                print("Bounding box after alignment, scaling and flipping:\n" + str(mesh.get_AABB()))
 
                 # if show_interims: #and USE_EIGENS:
                 #     print("==> eigenvalues for (x, y, z)")
