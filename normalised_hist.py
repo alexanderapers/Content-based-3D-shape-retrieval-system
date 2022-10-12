@@ -10,24 +10,27 @@ df = pd.read_csv('csv/Princeton_normalized_basic_mesh_info.csv')
 # plt.hist(vertices, bins=100)
 # plt.xlabel('num_vertices')
 # plt.ylabel('frequency')
-# plt.title("Distribution of number of vertices")
+# plt.title("Distribution of number of vertices after normalization")
+# plt.show()
 
 #faces histogram
 # faces = df['n_faces']
 # plt.hist(faces, bins=100)
 # plt.xlabel('num_faces')
 # plt.ylabel('frequency')
-# plt.title("Distribution of number of faces")
+# plt.title("Distribution of number of faces after normalization")
+# plt.show()
+
 
 #centroid after translation histogram
 # centroid_origin = df['d_centroid_origin']
 # plt.hist(centroid_origin, bins=15)
 # plt.xlabel('distance centroid to origin')
 # plt.ylabel('frequency')
-
 # plt.title("Translation distribution after normalization")
-
 # print(centroid_origin)
+# plt.savefig("resample_plots/translation_after")
+# plt.show()
 
 #scaling distribution after normalization
 # df3 = pd.read_csv('csv/Princeton_normalized_bounding_box.csv')
@@ -67,34 +70,39 @@ df = pd.read_csv('csv/Princeton_normalized_basic_mesh_info.csv')
 # plt.xlabel('length of diagonal of bounding box')
 # plt.ylabel('frequency')
 # plt.title("Scaling distribution after normalization")
-
+# plt.savefig("resample_plots/scaling_normalized")
 # plt.show()
 
+
+
 #alignment after distribution 
-csv_name ="./csv/Princeton_normalized_alignment.csv"
-csv_file_name = csv_name.split("/")[-1]
-#print('File Name:', csv_name.split("\\")[-1])
-print(csv_name)
-df = pd.read_csv(csv_name)
-#plt_histogram(df,csv_file_name)
-df_raw =df
-#data_dict = df_raw.to_dict()
-plt_name = csv_file_name.split('.')[:1]
-plt_name = str(plt_name[0])
+# csv_name ="./csv/Princeton_normalized_alignment.csv"
+# csv_file_name = csv_name.split("/")[-1]
+# #print('File Name:', csv_name.split("\\")[-1])
+# print(csv_name)
+# df = pd.read_csv(csv_name)
+# #plt_histogram(df,csv_file_name)
+# df_raw =df
+# #data_dict = df_raw.to_dict()
+# plt_name = csv_file_name.split('.')[:1]
+# plt_name = str(plt_name[0])
 
-fontsize =12
-df_raw.hist(column=['alignment_x'])
-plt.suptitle(plt_name, fontsize=fontsize)
-plt.ylabel("frequency")
-plt.xlabel(" x = [1,0,0]")
+# fontsize =12
+# df_raw.hist(column=['alignment_x'])
+# plt.suptitle(plt_name, fontsize=fontsize)
+# plt.ylabel("frequency")
+# plt.xlabel(" x = [1,0,0]")
+# plt.savefig("resample_plots/alignment_x_after")
 
-df_raw.hist(column=['alignment_y'])
-plt.suptitle(plt_name, fontsize=fontsize)
-plt.ylabel("frequency")
-plt.xlabel("y = [0,1,0]")
+# df_raw.hist(column=['alignment_y'])
+# plt.suptitle(plt_name, fontsize=fontsize)
+# plt.ylabel("frequency")
+# plt.xlabel("y = [0,1,0]")
+# plt.savefig("resample_plots/alignment_y_after")
 
-df_raw.hist(column=['alignment_z'])
-plt.suptitle(plt_name, fontsize=fontsize)
-plt.ylabel("frequency")
-plt.xlabel("z =  [0,0,1]")
-plt.show()
+# df_raw.hist(column=['alignment_z'])
+# plt.suptitle(plt_name, fontsize=fontsize)
+# plt.ylabel("frequency")
+# plt.xlabel("z =  [0,0,1]")
+# plt.savefig("resample_plots/alignment_z_after")
+# plt.show()
