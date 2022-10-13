@@ -38,14 +38,14 @@ import pylab as pl
 
 
 #centroid before translation histogram
-df2 = pd.read_csv('csv/Princeton_basic_mesh_info.csv')
-centroid_origin = df2['d_centroid_origin']
-plt.hist(centroid_origin[centroid_origin < 2], color='plum', bins=100)
-plt.xlabel('distance centroid to origin')
-plt.ylabel('frequency')
-plt.title("Translation distribution before normalization")
-plt.savefig("resample_plots/translation_before")
-plt.show()
+# df2 = pd.read_csv('csv/Princeton_basic_mesh_info.csv')
+# centroid_origin = df2['d_centroid_origin']
+# plt.hist(centroid_origin[centroid_origin < 2], color='plum', bins=100)
+# plt.xlabel('distance centroid to origin')
+# plt.ylabel('frequency')
+# plt.title("Translation distribution before normalization")
+# plt.savefig("resample_plots/translation_before")
+# plt.show()
 
 #scaling distribution before normalization
 # df3 = pd.read_csv('csv/Princeton_bounding_box.csv')

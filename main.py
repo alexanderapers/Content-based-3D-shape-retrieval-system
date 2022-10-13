@@ -1,4 +1,3 @@
-
 import sys
 from dataset import Dataset
 import face_area_plots
