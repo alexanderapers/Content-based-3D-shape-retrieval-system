@@ -3,27 +3,28 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-#vertices histogram
+#vertices histogram after
 
 # df = pd.read_csv('csv/Princeton_remeshed_normalized_basic_mesh_info.csv')
 # vertices = df['n_vertices']
-# plt.hist(vertices, bins=100)
+# plt.clf()
+# plt.hist(vertices, bins = 80)
 # plt.xlabel('number_of_vertices')
 # plt.ylabel('frequency')
 # plt.title("Distribution of number of vertices after normalization")
-# plt.savefig("resample_plots/normalized_vertices")
 # plt.xlim(xmin = 0, xmax = 20000)
+# plt.savefig("resample_plots/normalized_vertices")
 # plt.show()
 
 #faces histogram after
 # df = pd.read_csv('csv/Princeton_remeshed_normalized_basic_mesh_info.csv')
 # faces = df['n_faces']
-# plt.hist(faces, range = [0,20000])
+# plt.hist(faces)
 # plt.xlabel('number_of_faces')
 # plt.ylabel('frequency')
 # plt.title("Distribution of number of faces after normalization")
 # plt.savefig("resample_plots/normalized_faces")
-# #plt.xlim(xmin = 0, xmax = 20000)
+# plt.xlim(xmin = 0, xmax = 20000)
 # plt.show()
 
 
@@ -31,7 +32,7 @@ import numpy as np
 
 # df = pd.read_csv('csv/Princeton_remeshed_normalized_basic_mesh_info.csv')
 # centroid_origin = df['d_centroid_origin']
-# plt.hist(centroid_origin, range = [0, 1])
+# plt.hist(centroid_origin, range = [0, 1], bins = 15)
 # plt.xlabel('distance centroid to origin')
 # plt.ylabel('frequency')
 # plt.title("Translation distribution after normalization")
@@ -86,33 +87,33 @@ import numpy as np
 
 
 #alignment after distribution 
-csv_name ="./csv/Princeton_remeshed_normalized_alignment.csv"
-csv_file_name = csv_name.split("/")[-1]
-#print('File Name:', csv_name.split("\\")[-1])
-print(csv_name)
-df = pd.read_csv(csv_name)
-#plt_histogram(df,csv_file_name)
-df_raw =df
-#data_dict = df_raw.to_dict()
-plt_name = csv_file_name.split('.')[:1]
-plt_name = str(plt_name[0])
+# csv_name ="./csv/Princeton_remeshed_normalized_alignment.csv"
+# csv_file_name = csv_name.split("/")[-1]
+# #print('File Name:', csv_name.split("\\")[-1])
+# print(csv_name)
+# df = pd.read_csv(csv_name)
+# #plt_histogram(df,csv_file_name)
+# df_raw =df
+# #data_dict = df_raw.to_dict()
+# plt_name = csv_file_name.split('.')[:1]
+# plt_name = str(plt_name[0])
 
-fontsize =12
-df_raw.hist(column=['alignment_x'], range = [0,1])
-plt.suptitle(plt_name, fontsize=fontsize)
-plt.ylabel("frequency")
-plt.xlabel("|$e_1$ * x|")
-plt.savefig("resample_plots/alignment_x_after")
+# fontsize =12
+# df_raw.hist(column=['alignment_x'], range = [0,1])
+# plt.suptitle(plt_name, fontsize=fontsize)
+# plt.ylabel("frequency")
+# plt.xlabel("|$e_1$ * x|")
+# plt.savefig("resample_plots/alignment_x_after")
 
-df_raw.hist(column=['alignment_y'],range = [0,1] )
-plt.suptitle(plt_name, fontsize=fontsize)
-plt.ylabel("frequency")
-plt.xlabel("|$e_2$ * y|")
-plt.savefig("resample_plots/alignment_y_after")
+# df_raw.hist(column=['alignment_y'],range = [0,1] )
+# plt.suptitle(plt_name, fontsize=fontsize)
+# plt.ylabel("frequency")
+# plt.xlabel("|$e_2$ * y|")
+# plt.savefig("resample_plots/alignment_y_after")
 
-df_raw.hist(column=['alignment_z'],range = [0,1])
-plt.suptitle(plt_name, fontsize=fontsize)
-plt.ylabel("frequency")
-plt.xlabel("|$e_3$ * z|")
-plt.savefig("resample_plots/alignment_z_after")
-plt.show()
+# df_raw.hist(column=['alignment_z'],range = [0,1])
+# plt.suptitle(plt_name, fontsize=fontsize)
+# plt.ylabel("frequency")
+# plt.xlabel("|$e_3$ * z|")
+# plt.savefig("resample_plots/alignment_z_after")
+# plt.show()
