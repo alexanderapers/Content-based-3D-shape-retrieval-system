@@ -26,15 +26,15 @@ import pylab as pl
 # plt.show()
 
 #faces histogram before
-df = pd.read_csv('csv/Princeton_basic_mesh_info.csv')
-faces = df['n_faces']
-faces = [x for x in faces if x <= 20000]
-plt.hist(faces, bins=80)
-plt.xlabel('number_of_faces')
-plt.ylabel('frequency')
-plt.title("Distribution of number of faces before normalization")
-plt.savefig("resample_plots/num_faces")
-plt.show()
+# df = pd.read_csv('csv/Princeton_basic_mesh_info.csv')
+# faces = df['n_faces']
+# faces = [x for x in faces if x <= 20000]
+# plt.hist(faces, bins=80)
+# plt.xlabel('number_of_faces')
+# plt.ylabel('frequency')
+# plt.title("Distribution of number of faces before normalization")
+# plt.savefig("resample_plots/num_faces")
+# plt.show()
 
 
 #centroid before translation histogram
