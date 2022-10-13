@@ -33,7 +33,7 @@ import numpy as np
 
 # df = pd.read_csv('csv/Princeton_remeshed_normalized_basic_mesh_info.csv')
 # centroid_origin = df['d_centroid_origin']
-# plt.hist(centroid_origin, range =[0.000000003, 0.00000001], bins = 15, color='plum')
+# plt.hist(centroid_origin, range=[0,1.1], bins = 100, color='plum')#range =[0.000000003, 0.00000001], bins = 15, color='plum')
 # plt.xlabel('distance centroid to origin')
 # plt.ylabel('frequency')
 # plt.title("Translation distribution after normalization")
@@ -87,7 +87,7 @@ import numpy as np
 
 
 
-#alignment after distribution 
+#alignment after distribution
 # csv_name ="./csv/Princeton_remeshed_normalized_alignment.csv"
 # csv_file_name = csv_name.split("/")[-1]
 # #print('File Name:', csv_name.split("\\")[-1])
@@ -98,23 +98,23 @@ import numpy as np
 # #data_dict = df_raw.to_dict()
 # plt_name = csv_file_name.split('.')[:1]
 # plt_name = str(plt_name[0])
-
+# #
 # fontsize =12
-# df_raw.hist(column=['alignment_x'], color='plum', range = [0,1])
+# df_raw.hist(column=['alignment_x'], bins=100, color='plum', range = [0,1])
 # plt.suptitle(plt_name, fontsize=fontsize)
 # plt.ylabel("frequency")
-# plt.xlabel("|$e_1$ * x|")
+# plt.xlabel("$|e_1 \cdot x|$")
 # plt.savefig("resample_plots/alignment_x_after")
 
-# df_raw.hist(column=['alignment_y'], color='plum', range = [0,1] )
+# df_raw.hist(column=['alignment_y'], bins=100, color='plum', range = [0,1] )
 # plt.suptitle(plt_name, fontsize=fontsize)
 # plt.ylabel("frequency")
-# plt.xlabel("|$e_2$ * y|")
+# plt.xlabel("$|e_2 \cdot y|$")
 # plt.savefig("resample_plots/alignment_y_after")
 
-# df_raw.hist(column=['alignment_z'], color='plum', range = [0,1])
+# df_raw.hist(column=['alignment_z'], bins=100, color='plum', range = [0,1])
 # plt.suptitle(plt_name, fontsize=fontsize)
 # plt.ylabel("frequency")
-# plt.xlabel("|$e_3$ * z|")
+# plt.xlabel("$|e_3 \cdot z|$")
 # plt.savefig("resample_plots/alignment_z_after")
 # plt.show()

@@ -5,7 +5,7 @@ import pylab as pl
 
 #vertices histogram
 
-# df = pd.read_csv('csv/Princeton_basic_mesh_info.csv')
+#df = pd.read_csv('csv/Princeton_basic_mesh_info.csv')
 # vertices = df['n_vertices']
 # vertices = [x for x in vertices if int(float(x))<= 20000]
 # plt.hist(vertices,color='plum', bins=80)
@@ -38,14 +38,14 @@ import pylab as pl
 
 
 #centroid before translation histogram
-# df2 = pd.read_csv('csv/Princeton_basic_mesh_info.csv')
-# centroid_origin = df2['d_centroid_origin']
-# plt.hist(centroid_origin[centroid_origin < 2], color='plum', bins=15)
-# plt.xlabel('distance centroid to origin')
-# plt.ylabel('frequency')
-# plt.title("Translation distribution before normalization")
-# plt.savefig("resample_plots/translation_before")
-# plt.show()
+df2 = pd.read_csv('csv/Princeton_basic_mesh_info.csv')
+centroid_origin = df2['d_centroid_origin']
+plt.hist(centroid_origin[centroid_origin < 2], color='plum', bins=100)
+plt.xlabel('distance centroid to origin')
+plt.ylabel('frequency')
+plt.title("Translation distribution before normalization")
+plt.savefig("resample_plots/translation_before")
+plt.show()
 
 #scaling distribution before normalization
 # df3 = pd.read_csv('csv/Princeton_bounding_box.csv')
@@ -91,7 +91,7 @@ import pylab as pl
 
 
 
-#alignment distribution before normalization 
+#alignment distribution before normalization
 # csv_name ="./csv/Princeton_alignment.csv"
 # csv_file_name = csv_name.split("/")[-1]
 # #print('File Name:', csv_name.split("\\")[-1])
@@ -101,23 +101,23 @@ import pylab as pl
 # #data_dict = df_raw.to_dict()
 # plt_name = csv_file_name.split('.')[:1]
 # plt_name = str(plt_name[0])
-
+#
 # fontsize =12
-# df_raw.hist(column=['alignment_x'], color='plum')
+# df_raw.hist(column=['alignment_x'], bins=100, color='plum')
 # plt.suptitle(plt_name, fontsize=fontsize)
 # plt.ylabel("frequency")
-# plt.xlabel("|$e_1$ * x|")
+# plt.xlabel("$|e_1 \cdot x|$")
 # plt.savefig("resample_plots/alignment_x_before")
 
-# df_raw.hist(column=['alignment_y'], color='plum')
+# df_raw.hist(column=['alignment_y'], bins=100, color='plum')
 # plt.suptitle(plt_name, fontsize=fontsize)
 # plt.ylabel("frequency")
-# plt.xlabel("|$e_2$ * y|")
+# plt.xlabel("$|e_2 \cdot y|$")
 # plt.savefig("resample_plots/alignment_y_before")
 
-# df_raw.hist(column=['alignment_z'], color='plum')
+# df_raw.hist(column=['alignment_z'], bins=100, color='plum')
 # plt.suptitle(plt_name, fontsize=fontsize)
 # plt.ylabel("frequency")
-# plt.xlabel("|$e_3$ * z|")
+# plt.xlabel("$|e_3 \cdot z|$")
 # plt.savefig("resample_plots/alignment_z_before")
-# plt.show()
+#plt.show()

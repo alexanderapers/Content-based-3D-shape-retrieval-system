@@ -12,7 +12,7 @@ if __name__ == "__main__":
     dataset_remeshed_normalized.normalize()
 
     # takes a while to run and makes big files
-    face_area_plots.plot_face_area(dataset_original, dataset_remeshed)
+    #face_area_plots.plot_face_area(dataset_original, dataset_remeshed)
 
     # if len(sys.argv) == 2:
     #     dataset_remeshed_normalized.show_mesh(sys.argv[1])
