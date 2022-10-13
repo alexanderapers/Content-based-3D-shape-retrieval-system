@@ -82,6 +82,7 @@ import pylab as pl
 # maxDist(A[0])
 # maxDists = [maxDist(row) for row in A]
 # plt.hist(np.log(maxDists), bins=64)
+# plt.xlim(xmin = 0, xmax = 2)
 # plt.xlabel('length of diagonal of bounding box')
 # plt.ylabel('frequency')
 # plt.title("Scaling distribution before normalization")
