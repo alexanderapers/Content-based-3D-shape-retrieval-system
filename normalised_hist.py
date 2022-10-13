@@ -8,20 +8,22 @@ import numpy as np
 # df = pd.read_csv('csv/Princeton_remeshed_normalized_basic_mesh_info.csv')
 # vertices = df['n_vertices']
 # plt.hist(vertices, bins=100)
-# plt.xlabel('num_vertices')
+# plt.xlabel('number_of_vertices')
 # plt.ylabel('frequency')
 # plt.title("Distribution of number of vertices after normalization")
 # plt.savefig("resample_plots/normalized_vertices")
+# plt.xlim(xmin = 0, xmax = 20000)
 # plt.show()
 
-#faces histogram
+#faces histogram after
 # df = pd.read_csv('csv/Princeton_remeshed_normalized_basic_mesh_info.csv')
 # faces = df['n_faces']
-# plt.hist(faces, bins=100)
-# plt.xlabel('num_faces')
+# plt.hist(faces, range = [0,20000])
+# plt.xlabel('number_of_faces')
 # plt.ylabel('frequency')
 # plt.title("Distribution of number of faces after normalization")
 # plt.savefig("resample_plots/normalized_faces")
+# #plt.xlim(xmin = 0, xmax = 20000)
 # plt.show()
 
 
@@ -29,11 +31,12 @@ import numpy as np
 
 # df = pd.read_csv('csv/Princeton_remeshed_normalized_basic_mesh_info.csv')
 # centroid_origin = df['d_centroid_origin']
-# plt.hist(centroid_origin, bins=15)
+# plt.hist(centroid_origin, range = [0, 1])
 # plt.xlabel('distance centroid to origin')
 # plt.ylabel('frequency')
 # plt.title("Translation distribution after normalization")
-# print(centroid_origin)
+# #print(centroid_origin)
+# #plt.xlim(xmin = 0, xmax = 1)
 # plt.savefig("resample_plots/translation_after")
 # plt.show()
 
@@ -95,21 +98,21 @@ plt_name = csv_file_name.split('.')[:1]
 plt_name = str(plt_name[0])
 
 fontsize =12
-df_raw.hist(column=['alignment_x'])
+df_raw.hist(column=['alignment_x'], range = [0,1])
 plt.suptitle(plt_name, fontsize=fontsize)
 plt.ylabel("frequency")
-plt.xlabel(" x = [1,0,0]")
+plt.xlabel("|$e_1$ * x|")
 plt.savefig("resample_plots/alignment_x_after")
 
-df_raw.hist(column=['alignment_y'])
+df_raw.hist(column=['alignment_y'],range = [0,1] )
 plt.suptitle(plt_name, fontsize=fontsize)
 plt.ylabel("frequency")
-plt.xlabel("y = [0,1,0]")
+plt.xlabel("|$e_2$ * y|")
 plt.savefig("resample_plots/alignment_y_after")
 
-df_raw.hist(column=['alignment_z'])
+df_raw.hist(column=['alignment_z'],range = [0,1])
 plt.suptitle(plt_name, fontsize=fontsize)
 plt.ylabel("frequency")
-plt.xlabel("z =  [0,0,1]")
+plt.xlabel("|$e_3$ * z|")
 plt.savefig("resample_plots/alignment_z_after")
 plt.show()

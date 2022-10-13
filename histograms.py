@@ -9,7 +9,7 @@ import pylab as pl
 # vertices = df['n_vertices']
 # vertices = [x for x in vertices if int(float(x))<= 20000]
 # plt.hist(vertices, bins=80)
-# plt.xlabel('num_vertices')
+# plt.xlabel('number_of_vertices')
 # plt.ylabel('frequency')
 # plt.title("Distribution of number of vertices before normalization")
 # plt.savefig("resample_plots/num_vertices")
@@ -25,12 +25,12 @@ import pylab as pl
 # plt.savefig("resample_plots/categories")
 # plt.show()
 
-#faces histogram
+#faces histogram before
 # df = pd.read_csv('csv/Princeton_basic_mesh_info.csv')
 # faces = df['n_faces']
 # faces = [x for x in faces if x <= 20000]
 # plt.hist(faces, bins=80)
-# plt.xlabel('num_faces')
+# plt.xlabel('number_of_faces')
 # plt.ylabel('frequency')
 # plt.title("Distribution of number of faces before normalization")
 # plt.savefig("resample_plots/num_faces")
@@ -92,32 +92,32 @@ import pylab as pl
 
 
 #alignment distribution before normalization 
-# csv_name ="./csv/Princeton_alignment.csv"
-# csv_file_name = csv_name.split("/")[-1]
-# #print('File Name:', csv_name.split("\\")[-1])
-# print(csv_file_name)
-# df = pd.read_csv(csv_name)
-# df_raw =df
-# #data_dict = df_raw.to_dict()
-# plt_name = csv_file_name.split('.')[:1]
-# plt_name = str(plt_name[0])
+csv_name ="./csv/Princeton_alignment.csv"
+csv_file_name = csv_name.split("/")[-1]
+#print('File Name:', csv_name.split("\\")[-1])
+print(csv_file_name)
+df = pd.read_csv(csv_name)
+df_raw =df
+#data_dict = df_raw.to_dict()
+plt_name = csv_file_name.split('.')[:1]
+plt_name = str(plt_name[0])
 
-# fontsize =12
-# df_raw.hist(column=['alignment_x'])
-# plt.suptitle(plt_name, fontsize=fontsize)
-# plt.ylabel("frequency")
-# plt.xlabel(" x = [1,0,0]")
-# plt.savefig("resample_plots/alignment_x_before")
+fontsize =12
+df_raw.hist(column=['alignment_x'])
+plt.suptitle(plt_name, fontsize=fontsize)
+plt.ylabel("frequency")
+plt.xlabel("|$e_1$ * x|")
+plt.savefig("resample_plots/alignment_x_before")
 
-# df_raw.hist(column=['alignment_y'])
-# plt.suptitle(plt_name, fontsize=fontsize)
-# plt.ylabel("frequency")
-# plt.xlabel("y = [0,1,0]")
-# plt.savefig("resample_plots/alignment_y_before")
+df_raw.hist(column=['alignment_y'])
+plt.suptitle(plt_name, fontsize=fontsize)
+plt.ylabel("frequency")
+plt.xlabel("|$e_2$ * y|")
+plt.savefig("resample_plots/alignment_y_before")
 
-# df_raw.hist(column=['alignment_z'])
-# plt.suptitle(plt_name, fontsize=fontsize)
-# plt.ylabel("frequency")
-# plt.xlabel("z =  [0,0,1]")
-# plt.savefig("resample_plots/alignment_z_before")
-# plt.show()
+df_raw.hist(column=['alignment_z'])
+plt.suptitle(plt_name, fontsize=fontsize)
+plt.ylabel("frequency")
+plt.xlabel("|$e_3$ * z|")
+plt.savefig("resample_plots/alignment_z_before")
+plt.show()
