@@ -8,7 +8,7 @@ import pylab as pl
 # df = pd.read_csv('csv/Princeton_basic_mesh_info.csv')
 # vertices = df['n_vertices']
 # vertices = [x for x in vertices if int(float(x))<= 20000]
-# plt.hist(vertices, bins=80)
+# plt.hist(vertices,color='plum', bins=80)
 # plt.xlabel('number_of_vertices')
 # plt.ylabel('frequency')
 # plt.title("Distribution of number of vertices before normalization")
@@ -29,7 +29,7 @@ import pylab as pl
 # df = pd.read_csv('csv/Princeton_basic_mesh_info.csv')
 # faces = df['n_faces']
 # faces = [x for x in faces if x <= 20000]
-# plt.hist(faces, bins=80)
+# plt.hist(faces, color='plum', bins=80)
 # plt.xlabel('number_of_faces')
 # plt.ylabel('frequency')
 # plt.title("Distribution of number of faces before normalization")
@@ -40,7 +40,7 @@ import pylab as pl
 #centroid before translation histogram
 # df2 = pd.read_csv('csv/Princeton_basic_mesh_info.csv')
 # centroid_origin = df2['d_centroid_origin']
-# plt.hist(centroid_origin[centroid_origin < 2], bins=15)
+# plt.hist(centroid_origin[centroid_origin < 2], color='plum', bins=15)
 # plt.xlabel('distance centroid to origin')
 # plt.ylabel('frequency')
 # plt.title("Translation distribution before normalization")
@@ -103,19 +103,19 @@ import pylab as pl
 # plt_name = str(plt_name[0])
 
 # fontsize =12
-# df_raw.hist(column=['alignment_x'])
+# df_raw.hist(column=['alignment_x'], color='plum')
 # plt.suptitle(plt_name, fontsize=fontsize)
 # plt.ylabel("frequency")
 # plt.xlabel("|$e_1$ * x|")
 # plt.savefig("resample_plots/alignment_x_before")
 
-# df_raw.hist(column=['alignment_y'])
+# df_raw.hist(column=['alignment_y'], color='plum')
 # plt.suptitle(plt_name, fontsize=fontsize)
 # plt.ylabel("frequency")
 # plt.xlabel("|$e_2$ * y|")
 # plt.savefig("resample_plots/alignment_y_before")
 
-# df_raw.hist(column=['alignment_z'])
+# df_raw.hist(column=['alignment_z'], color='plum')
 # plt.suptitle(plt_name, fontsize=fontsize)
 # plt.ylabel("frequency")
 # plt.xlabel("|$e_3$ * z|")

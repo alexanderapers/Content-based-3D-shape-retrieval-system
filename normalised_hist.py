@@ -8,7 +8,7 @@ import numpy as np
 # df = pd.read_csv('csv/Princeton_remeshed_normalized_basic_mesh_info.csv')
 # vertices = df['n_vertices']
 # plt.clf()
-# plt.hist(vertices, bins = 80)
+# plt.hist(vertices, color='plum', bins = 80)
 # plt.xlabel('number_of_vertices')
 # plt.ylabel('frequency')
 # plt.title("Distribution of number of vertices after normalization")
@@ -19,7 +19,7 @@ import numpy as np
 #faces histogram after
 # df = pd.read_csv('csv/Princeton_remeshed_normalized_basic_mesh_info.csv')
 # faces = df['n_faces']
-# plt.hist(faces)
+# plt.hist(faces, color='plum')
 # plt.xlabel('number_of_faces')
 # plt.ylabel('frequency')
 # plt.title("Distribution of number of faces after normalization")
@@ -29,15 +29,16 @@ import numpy as np
 
 
 #centroid after translation histogram
+#axis is very small here because of centralised data (mention in report)
 
 # df = pd.read_csv('csv/Princeton_remeshed_normalized_basic_mesh_info.csv')
 # centroid_origin = df['d_centroid_origin']
-# plt.hist(centroid_origin, range = [0, 1], bins = 15)
+# plt.hist(centroid_origin, range =[0.000000003, 0.00000001], bins = 15, color='plum')
 # plt.xlabel('distance centroid to origin')
 # plt.ylabel('frequency')
 # plt.title("Translation distribution after normalization")
+# #plt.xlim(xmin = 0.00000000003, xmax = 0.)
 # #print(centroid_origin)
-# #plt.xlim(xmin = 0, xmax = 1)
 # plt.savefig("resample_plots/translation_after")
 # plt.show()
 
@@ -99,19 +100,19 @@ import numpy as np
 # plt_name = str(plt_name[0])
 
 # fontsize =12
-# df_raw.hist(column=['alignment_x'], range = [0,1])
+# df_raw.hist(column=['alignment_x'], color='plum', range = [0,1])
 # plt.suptitle(plt_name, fontsize=fontsize)
 # plt.ylabel("frequency")
 # plt.xlabel("|$e_1$ * x|")
 # plt.savefig("resample_plots/alignment_x_after")
 
-# df_raw.hist(column=['alignment_y'],range = [0,1] )
+# df_raw.hist(column=['alignment_y'], color='plum', range = [0,1] )
 # plt.suptitle(plt_name, fontsize=fontsize)
 # plt.ylabel("frequency")
 # plt.xlabel("|$e_2$ * y|")
 # plt.savefig("resample_plots/alignment_y_after")
 
-# df_raw.hist(column=['alignment_z'],range = [0,1])
+# df_raw.hist(column=['alignment_z'], color='plum', range = [0,1])
 # plt.suptitle(plt_name, fontsize=fontsize)
 # plt.ylabel("frequency")
 # plt.xlabel("|$e_3$ * z|")
