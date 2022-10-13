@@ -40,7 +40,6 @@ class Mesh:
         self.centroid = self.mesh.centroid
         self.d_centroid_origin = self.get_distance_centroid_origin()
         self.scale = self.get_scale()
-        self.flip = self.get_flip()
         self.n_vertices = self.get_n_vertices()
         self.n_faces = self.get_n_faces()
 
@@ -52,7 +51,6 @@ class Mesh:
         self.centroid = self.mesh.centroid
         self.d_centroid_origin = self.get_distance_centroid_origin()
         self.scale = self.get_scale()
-        self.flip = self.get_flip()
         self.n_vertices = self.get_n_vertices()
         self.n_faces = self.get_n_faces()
 
@@ -62,7 +60,6 @@ class Mesh:
         self.centroid = self.mesh.centroid
         self.d_centroid_origin = self.get_distance_centroid_origin()
         self.scale = self.get_scale()
-        self.flip = self.get_flip()
         self.n_vertices = self.get_n_vertices()
         self.n_faces = self.get_n_faces()
 
@@ -72,7 +69,6 @@ class Mesh:
         self.centroid = self.mesh.centroid
         self.d_centroid_origin = self.get_distance_centroid_origin()
         self.scale = self.get_scale()
-        self.flip = self.get_flip()
 
     def transform_vertices(self, matrix):
         new_vertices = []
@@ -85,12 +81,10 @@ class Mesh:
         self.centroid = self.mesh.centroid
         self.d_centroid_origin = self.get_distance_centroid_origin()
         self.scale = self.get_scale()
-        self.flip = self.get_flip()
 
     def normalize_scale(self):
         self.mesh.apply_scale(1.0 / max(self.mesh.extents))
         self.scale = self.get_scale()
-        self.flip = self.get_flip()
         #print(1.0/max(self.mesh.extents))
         self.bounding_box = trimesh.bounds.corners(self.mesh.bounds)
         self.centroid = self.mesh.centroid
@@ -103,6 +97,7 @@ class Mesh:
             flip = np.sign(np.sum(np.sign(coords) * (coords ** 2)))
             I[i, i] = flip
         self.apply_transform(I)
+        self.flip = self.get_flip()
 
     def normalize_translation(self):
         # First, we set barycenter on origin.
@@ -128,6 +123,8 @@ class Mesh:
     def get_vertices(self):
         return self.mesh.vertices
 
+    def get_faces(self):
+        return self.mesh.faces
 
     def get_n_faces(self):
         return self.mesh.faces.shape[0]
@@ -141,21 +138,24 @@ class Mesh:
         return sum(self.centroid * self.centroid) ** 0.5
 
 
-    def is_normalised(self):
+    def is_normalised(self, verbose=True):
         if self.d_centroid_origin > 1e-3:
-            print("mesh is not centered")
+            if verbose:
+                print("mesh is not centered")
             return False
         if (np.max(self.mesh.extents) - 1) ** 2 > 1e-3:
-            print("mesh is not unit scaled")
-            print(np.max(self.mesh.extents))
+            if verbose:
+                print("mesh is not unit scaled")
+                print(np.max(self.mesh.extents))
             return False
         # covariance = np.cov(np.transpose(self.get_vertices()))
         # eigenvalues, eigenvectors = np.linalg.eig(covariance)
         # idx = eigenvalues.argsort()[::-1]
         # sorted_eigenvectors = eigenvectors[:,idx]
         # if np.sum(np.diagonal(sorted_eigenvectors) ** 2) - 3 > 1e-3:
-        #     print(self.name + " one of the diagonals is not parallel to axes")
-        #     print(sorted_eigenvectors)
+        #     if verbose:
+        #         print(self.name + " one of the diagonals is not parallel to axes")
+        #         print(sorted_eigenvectors)
         #     return False
         #
         # I = np.eye(4)
@@ -185,9 +185,26 @@ class Mesh:
 
 
     def get_flip(self):
+        if not self.is_normalised(verbose=False):
+            new_mesh = trimesh.base.Trimesh(vertices = self.get_vertices(), faces = self.get_faces())
+            transformVector = -new_mesh.centroid
+            transformMatrix = trimesh.transformations.translation_matrix(transformVector)
+            new_mesh.apply_transform(transformMatrix)
+            covariance = np.cov(np.transpose(new_mesh.vertices))
+            eigenvalues, eigenvectors = np.linalg.eig(covariance)
+            idx = eigenvalues.argsort()[::-1]
+            sorted_eigenvectors = eigenvectors[:,idx]
+            sorted_eigenvectors[:, 2] = np.cross(sorted_eigenvectors[:, 0], sorted_eigenvectors[:, 1])
+            sorted_eigenvectors = sorted_eigenvectors.T
+            sorted_eigenvectors_homo = np.hstack([np.vstack([sorted_eigenvectors, np.array([0,0,0])]), np.array([[0],[0],[0],[1]])])
+            new_mesh.apply_transform(sorted_eigenvectors_homo)
+            new_mesh.apply_scale(1.0 / max(new_mesh.extents))
+        else:
+            new_mesh = self.mesh
+
         flips = np.zeros(shape=3)
         for i in range(3):
-            coords = self.get_vertices()[:,i]
+            coords = new_mesh.vertices[:,i]
             flip = np.sign(np.sum(np.sign(coords) * (coords ** 2)))
             flips[i] = flip
         return flips
