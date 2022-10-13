@@ -44,6 +44,7 @@ class Mesh:
 
 
     def subdivide_to_size(self):
+        # TODO do this properly? take 0.01 and square root
         self.mesh = self.mesh.subdivide_to_size(np.sum(self.mesh.extents ** 2), max_iter=1000)
         #self.mesh = trimesh.base.Trimesh(vertices = vertices, faces = new_faces)
         self.centroid = self.mesh.centroid

@@ -11,8 +11,12 @@ def plot_face_area(dataset_original, dataset_remeshed):
         print("Writing another very big face area csv")
 
     df = pd.read_csv("csv/{}_face_area.csv".format(dataset_original.folder_name_dataset))
+    plt.hist(df, bins=np.arange(0, 1e-4, 5.5e-7), weights=np.ones(len(df)) / len(df))
+    plt.ylim([0,0.15])
+    plt.savefig("resample_plots/face_areas_before")
+    plt.clf()
+
     df2 = pd.read_csv("csv/{}_face_area.csv".format(dataset_remeshed.folder_name_dataset))
-    plt.hist(df, bins=np.arange(0, 1e-4, 5.5e-7))
-    plt.hist(df2, bins=np.arange(0, 1e-4, 5.5e-7))
-    plt.savefig("resample_plots/face_areas")
-    plt.show()
+    plt.hist(df2, bins=np.arange(0, 1e-4, 5.5e-7), weights=np.ones(len(df2)) / len(df2))
+    plt.ylim([0,0.15])
+    plt.savefig("resample_plots/face_areas_after")
