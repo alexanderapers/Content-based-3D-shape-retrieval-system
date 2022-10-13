@@ -16,8 +16,8 @@ class Mesh:
         self.centroid = self.mesh.centroid
         self.d_centroid_origin = self.get_distance_centroid_origin()
         self.alignment = self.get_alignment()
-        #self.scale = self.get_scale()
-
+        self.scale = self.get_scale()
+        self.flip = self.get_flip()
 
     def show(self):
         self.mesh.show()
@@ -28,7 +28,7 @@ class Mesh:
 
 
     def basic_mesh_info(self):
-        return [self.name, self.category, self.n_vertices, self.n_faces, self.d_centroid_origin]
+        return [self.name, self.category, self.n_vertices, self.n_faces, self.d_centroid_origin, self.scale]
 
 
     def get_AABB(self):
@@ -39,6 +39,8 @@ class Mesh:
         self.mesh = self.mesh.subdivide()
         self.centroid = self.mesh.centroid
         self.d_centroid_origin = self.get_distance_centroid_origin()
+        self.scale = self.get_scale()
+        self.flip = self.get_flip()
         self.n_vertices = self.get_n_vertices()
         self.n_faces = self.get_n_faces()
 
@@ -49,6 +51,8 @@ class Mesh:
         #self.mesh = trimesh.base.Trimesh(vertices = vertices, faces = new_faces)
         self.centroid = self.mesh.centroid
         self.d_centroid_origin = self.get_distance_centroid_origin()
+        self.scale = self.get_scale()
+        self.flip = self.get_flip()
         self.n_vertices = self.get_n_vertices()
         self.n_faces = self.get_n_faces()
 
@@ -57,6 +61,8 @@ class Mesh:
         self.mesh = self.mesh.simplify_quadratic_decimation(3500)
         self.centroid = self.mesh.centroid
         self.d_centroid_origin = self.get_distance_centroid_origin()
+        self.scale = self.get_scale()
+        self.flip = self.get_flip()
         self.n_vertices = self.get_n_vertices()
         self.n_faces = self.get_n_faces()
 
@@ -65,6 +71,8 @@ class Mesh:
         self.bounding_box = trimesh.bounds.corners(self.mesh.bounds)
         self.centroid = self.mesh.centroid
         self.d_centroid_origin = self.get_distance_centroid_origin()
+        self.scale = self.get_scale()
+        self.flip = self.get_flip()
 
     def transform_vertices(self, matrix):
         new_vertices = []
@@ -76,9 +84,13 @@ class Mesh:
         self.bounding_box = trimesh.bounds.corners(self.mesh.bounds)
         self.centroid = self.mesh.centroid
         self.d_centroid_origin = self.get_distance_centroid_origin()
+        self.scale = self.get_scale()
+        self.flip = self.get_flip()
 
     def normalize_scale(self):
         self.mesh.apply_scale(1.0 / max(self.mesh.extents))
+        self.scale = self.get_scale()
+        self.flip = self.get_flip()
         #print(1.0/max(self.mesh.extents))
         self.bounding_box = trimesh.bounds.corners(self.mesh.bounds)
         self.centroid = self.mesh.centroid
@@ -164,8 +176,21 @@ class Mesh:
         return np.absolute(np.diagonal(sorted_eigenvectors))
 
 
+    def get_scale(self):
+        return np.sqrt(np.sum(self.mesh.extents ** 2))
+
+
     def get_face_areas_in_bins(self, bins):
         return np.histogram(self.mesh.area_faces, bins)[0]
+
+
+    def get_flip(self):
+        flips = np.zeros(shape=3)
+        for i in range(3):
+            coords = self.get_vertices()[:,i]
+            flip = np.sign(np.sum(np.sign(coords) * (coords ** 2)))
+            flips[i] = flip
+        return flips
 
 
     def get_face_areas(self):

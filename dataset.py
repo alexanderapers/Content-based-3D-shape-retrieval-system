@@ -15,13 +15,14 @@ class Dataset:
         if write_other_csv:
             self.write_bounding_box_csv()
             self.write_alignment_csv()
+            self.write_flipping_csv()
 
 
     def write_basic_info_csv(self):
         print("Writing basic csv info of {}".format(self.folder_name_dataset))
         with open(os.getcwd() + "/csv/" + self.folder_name_dataset + "_basic_mesh_info.csv", "w") as conn:
             writer = csv.writer(conn)
-            writer.writerow(["mesh_name", "category", "n_vertices", "n_faces", "d_centroid_origin"])
+            writer.writerow(["mesh_name", "category", "n_vertices", "n_faces", "d_centroid_origin", "scale"])
             for mesh in self.make_all_meshes():
                 writer.writerow(mesh.basic_mesh_info())
 
@@ -42,6 +43,15 @@ class Dataset:
             writer.writerow(["mesh name", "alignment_x", "alignment_y", "alignment_z"])
             for mesh in self.make_all_meshes():
                 writer.writerow([mesh.name] + list(mesh.get_alignment()))
+
+
+    def write_flipping_csv(self):
+        print("Writing flipping csv info of {}".format(self.folder_name_dataset))
+        with open(os.getcwd() + "/csv/" + self.folder_name_dataset + "_flipping.csv", "w") as conn:
+            writer = csv.writer(conn)
+            writer.writerow(["mesh name", "flip_x", "flip_y", "flip_z"])
+            for mesh in self.make_all_meshes():
+                writer.writerow([mesh.name] + list(mesh.get_flip()))
 
 
     def write_face_area_csv(self):
