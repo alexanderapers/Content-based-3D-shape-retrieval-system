@@ -2,27 +2,32 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 
-df = pd.read_csv('csv/Princeton_normalized_basic_mesh_info.csv')
-
 
 #vertices histogram
+
+# df = pd.read_csv('csv/Princeton_normalized_basic_mesh_info.csv')
 # vertices = df['n_vertices']
 # plt.hist(vertices, bins=100)
 # plt.xlabel('num_vertices')
 # plt.ylabel('frequency')
 # plt.title("Distribution of number of vertices after normalization")
+# plt.savefig("resample_plots/normalized_vertices")
 # plt.show()
 
 #faces histogram
+# df = pd.read_csv('csv/Princeton_normalized_basic_mesh_info.csv')
 # faces = df['n_faces']
 # plt.hist(faces, bins=100)
 # plt.xlabel('num_faces')
 # plt.ylabel('frequency')
 # plt.title("Distribution of number of faces after normalization")
+# plt.savefig("resample_plots/normalized_faces")
 # plt.show()
 
 
 #centroid after translation histogram
+
+# df = pd.read_csv('csv/Princeton_normalized_basic_mesh_info.csv')
 # centroid_origin = df['d_centroid_origin']
 # plt.hist(centroid_origin, bins=15)
 # plt.xlabel('distance centroid to origin')
@@ -31,6 +36,7 @@ df = pd.read_csv('csv/Princeton_normalized_basic_mesh_info.csv')
 # print(centroid_origin)
 # plt.savefig("resample_plots/translation_after")
 # plt.show()
+
 
 #scaling distribution after normalization
 # df3 = pd.read_csv('csv/Princeton_normalized_bounding_box.csv')
