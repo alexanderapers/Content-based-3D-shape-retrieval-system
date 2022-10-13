@@ -23,8 +23,8 @@ import numpy as np
 # plt.xlabel('number_of_faces')
 # plt.ylabel('frequency')
 # plt.title("Distribution of number of faces after normalization")
-# plt.xlim(xmin = 0, xmax = 20000)
 # plt.savefig("resample_plots/normalized_faces")
+# plt.xlim(xmin = 0, xmax = 20000)
 # plt.show()
 
 
