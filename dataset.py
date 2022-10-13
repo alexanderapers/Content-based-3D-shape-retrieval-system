@@ -39,7 +39,7 @@ class Dataset:
         print("Writing alignment csv info of {}".format(self.folder_name_dataset))
         with open(os.getcwd() + "/csv/" + self.folder_name_dataset + "_alignment.csv", "w") as conn:
             writer = csv.writer(conn)
-            writer.writerow(["mesh name", "alignment_x", "alignment_y", "alignment_y"])
+            writer.writerow(["mesh name", "alignment_x", "alignment_y", "alignment_z"])
             for mesh in self.make_all_meshes():
                 writer.writerow([mesh.name] + list(mesh.get_alignment()))
 
