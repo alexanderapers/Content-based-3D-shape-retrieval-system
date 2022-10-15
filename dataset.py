@@ -4,6 +4,8 @@ from mesh import Mesh
 import numpy as np
 from os.path import join
 import trimesh
+from features_mesh import Features_Mesh
+from tqdm import tqdm
 
 class Dataset:
     def __init__(self, folder_name_dataset, write_basic_csv=False, write_other_csv=False):
@@ -62,6 +64,17 @@ class Dataset:
             for mesh in self.make_all_meshes():
                 for face_area in mesh.get_face_areas():
                     writer.writerow([face_area])
+
+
+    def write_elementary_features(self):
+        print("Writing elementary features csv info of {}".format(self.folder_name_dataset))
+        if not os.path.exists(join(os.getcwd(), "features")):
+            os.mkdir("features")
+        with open(os.getcwd() + "/features/" + self.folder_name_dataset + "_elementary_features.csv", "w") as conn:
+            writer = csv.writer(conn)
+            writer.writerow(["mesh name", "area", "compactness", "AABB_volume", "diameter", "eccentricity"])
+            for mesh in tqdm(self.make_all_meshes()):
+                writer.writerow(Features_Mesh(mesh).get_all_elementary_features())
 
 
     def get_face_areas_in_bins(self, bins):
