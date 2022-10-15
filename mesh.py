@@ -1,7 +1,12 @@
 import trimesh
 from trimesh.exchange.export import export_mesh
-from trimesh.repair import fix_inversion
 import numpy as np
+from trimesh.repair import fill_holes
+from trimesh.repair import fix_inversion
+from trimesh.repair import fix_normals
+from trimesh.repair import fix_winding
+from trimesh.repair import broken_faces
+from trimesh.repair import stitch
 #import open3d as o3d
 
 class Mesh:
@@ -212,3 +217,13 @@ class Mesh:
 
     def get_face_areas(self):
         return self.mesh.area_faces
+
+
+    def fix_mesh(self):
+        self.mesh = self.mesh.process(validate=False)
+        fill_holes(self.mesh)
+        fix_inversion(self.mesh, multibody=True)
+        fix_normals(self.mesh, multibody=True)
+        fix_winding(self.mesh)
+        #faces = broken_faces(self.mesh)
+        #stitch(self.mesh, faces=faces)

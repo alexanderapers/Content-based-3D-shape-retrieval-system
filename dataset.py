@@ -102,7 +102,7 @@ class Dataset:
 
 
     def get_mesh(self, mesh_name):
-        for mesh in self.make_all_meshes:
+        for mesh in self.make_all_meshes():
             if mesh.name == mesh_name:
                 return mesh
         raise Exception("This mesh was not found.")
@@ -158,6 +158,8 @@ class Dataset:
                 progress += 1
 
                 print(mesh.name)
+
+                mesh.fix_mesh()
 
                 print("Original centroid: " + str(mesh.centroid))
                 mesh.normalize_translation()
