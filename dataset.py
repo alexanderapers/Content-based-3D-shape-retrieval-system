@@ -199,3 +199,4 @@ class Dataset:
             self.write_basic_info_csv()
             self.write_bounding_box_csv()
             self.write_alignment_csv()
+            self.write_flipping_csv()
