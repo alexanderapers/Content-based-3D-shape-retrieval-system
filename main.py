@@ -1,5 +1,6 @@
 import sys
 from dataset import Dataset
+from shape_features_mesh import Shape_Features_Mesh
 import face_area_plots
 
 if __name__ == "__main__":
@@ -11,6 +12,12 @@ if __name__ == "__main__":
     dataset_remeshed_normalized.normalize()
     #dataset_remeshed_normalized.write_elementary_features()
 
+    # i=0
+    # for mesh in dataset_remeshed_normalized:
+    #   Shape_Features_Mesh(mesh)
+    #   i += 1
+    #   if i > 10:
+    #       break
 
     # takes a while to run and makes big files
     #face_area_plots.plot_face_area(dataset_original, dataset_remeshed)
