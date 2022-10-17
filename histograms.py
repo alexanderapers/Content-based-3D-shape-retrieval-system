@@ -91,7 +91,7 @@ plt.suptitle(plt_name, fontsize=fontsize)
 #plt.xlim([1, 2])
 #plt.axis([xmin, xmax, ymin, ymax])
 plt.ylabel("frequency")
-plt.xlabel("average value to tightly fit unit cube ")
+plt.xlabel("length of diagonal box of the axis aligned bounding box")
 plt.savefig("resample_plots/scaling_before")
 plt.show()
 

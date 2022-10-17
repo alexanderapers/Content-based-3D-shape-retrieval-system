@@ -87,7 +87,7 @@ df.hist(column=["scale"], color='plum')
 plt.xlim([1, 5])
 plt.suptitle(plt_name, fontsize=fontsize)
 plt.ylabel("frequency")
-plt.xlabel("average value to tightly fit unit cube ")
+plt.xlabel("length of diagonal box of the axis aligned bounding box")
 plt.savefig("resample_plots/scaling_after")
 plt.show()
 
