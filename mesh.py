@@ -222,8 +222,6 @@ class Mesh:
     def fix_mesh(self):
         self.mesh = self.mesh.process(validate=False)
         fill_holes(self.mesh)
-        fix_inversion(self.mesh, multibody=True)
         fix_normals(self.mesh, multibody=True)
-        fix_winding(self.mesh)
         #faces = broken_faces(self.mesh)
         #stitch(self.mesh, faces=faces)
