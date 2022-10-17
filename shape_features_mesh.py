@@ -4,6 +4,7 @@ from trimesh.sample import sample_surface_even
 from trimesh.points import PointCloud
 import logging
 #import time
+import matplotlib.pyplot as plt
 
 class Shape_Features_Mesh:
     def __init__(self, mesh, n_samples=6500, minimum_n_samples=2000):
@@ -19,6 +20,8 @@ class Shape_Features_Mesh:
         self.D2 = self.get_D2()
         self.D3 = self.get_D3()
         self.D4 = self.get_D4()
+
+        #hist, _ = np.histogram(self.A3, bins=np.arange(0, np.pi + np.pi/10, np.pi/10), weights=np.ones(len(self.A3)) / len(self.A3))
         # print(self.A3)
         # print(min(self.A3), max(self.A3))
         # print()
