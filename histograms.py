@@ -21,7 +21,7 @@ fontsize =12
 
 #category histogram
 # df = pd.read_csv('csv/Princeton_basic_mesh_info.csv')
-# df2 = df['category'].value_counts().plot(kind ='barh')
+# df2 = df['category'].value_counts().plot(kind ='barh', color='plum')
 # plt.ylabel('category')
 # plt.xlabel('frequency')
 # plt.title("Distribution by category")
@@ -83,35 +83,37 @@ fontsize =12
 #plt.show()
 
 #scaling distribution before normalization
-csv_name ="./csv/Princeton_basic_mesh_info.csv"
-plt_name = "scale before normalization"
-df = pd.read_csv(csv_name)
-df.hist(column=["scale"], color='plum')
-plt.suptitle(plt_name, fontsize=fontsize)
-#plt.xlim([1, 2])
-#plt.axis([xmin, xmax, ymin, ymax])
-plt.ylabel("frequency")
-plt.xlabel("length of diagonal box of the axis aligned bounding box")
-plt.savefig("resample_plots/scaling_before")
-plt.show()
+# csv_name ="./csv/Princeton_basic_mesh_info.csv"
+# plt_name = "scale before normalization"
+# df = pd.read_csv(csv_name)
+# df.hist(column=["scale"], color='plum')
+# plt.suptitle(plt_name, fontsize=fontsize)
+# #plt.xlim([1, 2])
+# #plt.axis([xmin, xmax, ymin, ymax])
+# plt.ylabel("frequency")
+# plt.xlabel("length of diagonal box of the axis aligned bounding box")
+# plt.savefig("resample_plots/scaling_before")
+# plt.show()
 
 
 
-#flipping
-csv_name ="./csv/Princeton_flipping.csv"
-plt_name = "Flipping distribution before normalization"
-df = pd.read_csv(csv_name)
-cx = df['flip_x'].value_counts()[1]
-cy = df['flip_y'].value_counts()[1]
-cz = df['flip_z'].value_counts()[1]
-print(cx,cy,cz)
-data = {'flip_x': cx, 'flip_y': cy, 'flip_z': cz}
-df = pd.Series(data)
-plt.bar(range(len(df)), df.values, align='center', color='plum')
-plt.xticks(range(len(df)), df.index.values, size='small')
-plt.suptitle(plt_name, fontsize=fontsize)
-plt.ylabel("frequency")
-plt.xlabel("number of correct flips in each dimension")
-plt.savefig("resample_plots/flipping_before")
-plt.show()
+# #flipping
+# csv_name ="./csv/Princeton_flipping.csv"
+# plt_name = "Flipping distribution before normalization"
+# df = pd.read_csv(csv_name)
+# cx = df['flip_x'].value_counts()[1]
+# cy = df['flip_y'].value_counts()[1]
+# cz = df['flip_z'].value_counts()[1]
+# print(cx,cy,cz)
+# data = {'flip_x': cx, 'flip_y': cy, 'flip_z': cz}
+# df = pd.Series(data)
+# plt.bar(range(len(df)), df.values, align='center', color='plum')
+# plt.xticks(range(len(df)), df.index.values, size='small')
+# plt.suptitle(plt_name, fontsize=fontsize)
+# plt.ylabel("frequency")
+# plt.xlabel("number of correct flips in each dimension")
+# plt.savefig("resample_plots/flipping_before")
+# plt.show()
+
+
 
