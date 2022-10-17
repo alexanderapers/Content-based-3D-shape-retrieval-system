@@ -94,7 +94,7 @@ plt.show()
 
 #flipping distribution after normalization
 csv_name ="./csv/Princeton_remeshed_normalized_flipping.csv"
-plt_name = "Flipping distribution before normalization"
+plt_name = "Flipping distribution after normalization"
 plt.figure(2)
 df = pd.read_csv(csv_name)
 cx = df['flip_x'].value_counts()[1]
