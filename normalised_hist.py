@@ -80,16 +80,18 @@ from matplotlib import ft2font
 
 
 #scaling distribution after normalization
-# csv_name ="./csv/Princeton_remeshed_normalized_basic_mesh_info.csv"
-# plt_name = "scale after normalization"
-# df = pd.read_csv(csv_name)
-# plt.hist(df["scale"], color='plum', bins=20)
-# plt.xlim([0, 3])
-# plt.suptitle(plt_name, fontsize=fontsize)
-# plt.ylabel("frequency")
-# plt.xlabel("length of diagonal box of the axis aligned bounding box")
-# plt.savefig("resample_plots/scaling_after")
-# plt.show()
+csv_name ="./csv/Princeton_remeshed_normalized_basic_mesh_info.csv"
+plt_name = "scale after normalization"
+df = pd.read_csv(csv_name)
+print(len(df["scale"]))
+plt.hist(df["scale"], color='plum', bins=np.arange(0, 3, 0.05))
+plt.xlim([0, 3])
+#plt.ylim([0, 220])
+plt.suptitle(plt_name, fontsize=fontsize)
+plt.ylabel("frequency")
+plt.xlabel("length of diagonal box of the axis aligned bounding box")
+plt.savefig("resample_plots/scaling_after")
+plt.show()
 
 
 #flipping distribution after normalization

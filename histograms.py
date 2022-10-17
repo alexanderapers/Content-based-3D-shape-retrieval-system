@@ -83,17 +83,18 @@ fontsize =12
 #plt.show()
 
 #scaling distribution before normalization
-# csv_name ="./csv/Princeton_basic_mesh_info.csv"
-# plt_name = "scale before normalization"
-# df = pd.read_csv(csv_name)
-# plt.hist(df["scale"][df["scale"] < 5], color='plum', bins=20)
-# plt.suptitle(plt_name, fontsize=fontsize)
-# plt.xlim([0, 5])
-# #plt.axis([xmin, xmax, ymin, ymax])
-# plt.ylabel("frequency")
-# plt.xlabel("length of diagonal box of the axis aligned bounding box")
-# plt.savefig("resample_plots/scaling_before")
-# plt.show()
+csv_name ="./csv/Princeton_basic_mesh_info.csv"
+plt_name = "scale before normalization"
+df = pd.read_csv(csv_name)
+plt.hist(df["scale"][df["scale"] < 5], color='plum', bins=np.arange(0, 3, 0.05))
+plt.suptitle(plt_name, fontsize=fontsize)
+plt.xlim([0, 3])
+#plt.ylim([0, 220])
+#plt.axis([xmin, xmax, ymin, ymax])
+plt.ylabel("frequency")
+plt.xlabel("length of diagonal box of the axis aligned bounding box")
+plt.savefig("resample_plots/scaling_before")
+plt.show()
 
 
 
