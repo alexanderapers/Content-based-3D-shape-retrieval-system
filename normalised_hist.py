@@ -80,16 +80,16 @@ from matplotlib import ft2font
 
 
 #scaling distribution after normalization
-csv_name ="./csv/Princeton_remeshed_normalized_basic_mesh_info.csv"
-plt_name = "scale after normalization"
-df = pd.read_csv(csv_name)
-df.hist(column=["scale"], color='plum')
-plt.xlim([1, 5])
-plt.suptitle(plt_name, fontsize=fontsize)
-plt.ylabel("frequency")
-plt.xlabel("length of diagonal box of the axis aligned bounding box")
-plt.savefig("resample_plots/scaling_after")
-plt.show()
+# csv_name ="./csv/Princeton_remeshed_normalized_basic_mesh_info.csv"
+# plt_name = "scale after normalization"
+# df = pd.read_csv(csv_name)
+# df.hist(column=["scale"], color='plum')
+# plt.xlim([1, 5])
+# plt.suptitle(plt_name, fontsize=fontsize)
+# plt.ylabel("frequency")
+# plt.xlabel("length of diagonal box of the axis aligned bounding box")
+# plt.savefig("resample_plots/scaling_after")
+# plt.show()
 
 
 #flipping distribution after normalization
@@ -103,10 +103,10 @@ cz = df['flip_z'].value_counts()[1]
 print(cx,cy,cz)
 data = {'flip_x': cx, 'flip_y': cy, 'flip_z': cz}
 df = pd.Series(data)
-plt.bar(range(len(df)), df.values, align='center', color='plum')
+plt.bar(range(len(df)), df.values, align='center', color='plum', width = 0.3)
 plt.xticks(range(len(df)), df.index.values, size='small')
 plt.suptitle(plt_name, fontsize=fontsize)
 plt.ylabel("frequency")
-plt.xlabel("number of correct flips in each dimension")
+plt.xlabel("number of meshes with correct orientation in each dimension")
 plt.savefig("resample_plots/flipping_after")
 plt.show()
