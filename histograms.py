@@ -3,6 +3,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pylab as pl
 
+fontsize =12
+
+
 #vertices histogram
 
 #df = pd.read_csv('csv/Princeton_basic_mesh_info.csv')
@@ -47,49 +50,6 @@ import pylab as pl
 # plt.savefig("resample_plots/translation_before")
 # plt.show()
 
-#scaling distribution before normalization
-# df3 = pd.read_csv('csv/Princeton_bounding_box.csv')
-# A = np.array(df3.iloc[:, 1:])
-# corners = []
-# for i in range(8):
-#     corner_xyz = A[:, 3*i : 3*i + 3]
-#     corners.append(corner_xyz)
-#     len(corners)
-#     corners[-1]
-#     np.linalg.norm([
-#     [0,0,0],
-#     [1,1,1]
-# ])**2
-
-# euclideanDist = lambda u, v: np.linalg.norm([u, v])
-
-# # distance between 2 corners for a given row
-# def dist(row, i, j):  # i, j are corner-indices
-#     # construct corner-vectors from indices
-#     v_i = row[3*i : 3*i + 3]
-#     v_j = row[3*j : 3*j + 3]
-
-#     return euclideanDist(v_i, v_j)
-
-# def maxDist(row):
-#     dists = []
-#     for i in range(8):
-#         for j in range(i+1, 8):
-#             dists.append(dist(row, i, j))
-
-#     return max(dists)
-
-# maxDist(A[0])
-# maxDists = [maxDist(row) for row in A]
-# plt.hist(np.log(maxDists), bins=64)
-# plt.xlim(xmin = 0, xmax = 2)
-# plt.xlabel('length of diagonal of bounding box')
-# plt.ylabel('frequency')
-# plt.title("Scaling distribution before normalization")
-# plt.savefig("resample_plots/scaling_before")
-# plt.show()
-
-
 
 #alignment distribution before normalization
 # csv_name ="./csv/Princeton_alignment.csv"
@@ -121,3 +81,37 @@ import pylab as pl
 # plt.xlabel("$|e_3 \cdot z|$")
 # plt.savefig("resample_plots/alignment_z_before")
 #plt.show()
+
+#scaling distribution before normalization
+csv_name ="./csv/Princeton_basic_mesh_info.csv"
+plt_name = "scale before normalization"
+df = pd.read_csv(csv_name)
+df.hist(column=["scale"], color='plum')
+plt.suptitle(plt_name, fontsize=fontsize)
+#plt.xlim([1, 2])
+#plt.axis([xmin, xmax, ymin, ymax])
+plt.ylabel("frequency")
+plt.xlabel("length of diagonal box of the axis aligned bounding box")
+plt.savefig("resample_plots/scaling_before")
+plt.show()
+
+
+
+#flipping
+csv_name ="./csv/Princeton_flipping.csv"
+plt_name = "Flipping distribution before normalization"
+df = pd.read_csv(csv_name)
+cx = df['flip_x'].value_counts()[1]
+cy = df['flip_y'].value_counts()[1]
+cz = df['flip_z'].value_counts()[1]
+print(cx,cy,cz)
+data = {'flip_x': cx, 'flip_y': cy, 'flip_z': cz}
+df = pd.Series(data)
+plt.bar(range(len(df)), df.values, align='center', color='plum')
+plt.xticks(range(len(df)), df.index.values, size='small')
+plt.suptitle(plt_name, fontsize=fontsize)
+plt.ylabel("frequency")
+plt.xlabel("number of correct flips in each dimension")
+plt.savefig("resample_plots/flipping_before")
+plt.show()
+
