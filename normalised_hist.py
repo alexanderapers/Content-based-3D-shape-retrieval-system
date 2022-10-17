@@ -83,8 +83,8 @@ from matplotlib import ft2font
 # csv_name ="./csv/Princeton_remeshed_normalized_basic_mesh_info.csv"
 # plt_name = "scale after normalization"
 # df = pd.read_csv(csv_name)
-# df.hist(column=["scale"], color='plum')
-# plt.xlim([1, 5])
+# plt.hist(df["scale"], color='plum', bins=20)
+# plt.xlim([0, 3])
 # plt.suptitle(plt_name, fontsize=fontsize)
 # plt.ylabel("frequency")
 # plt.xlabel("length of diagonal box of the axis aligned bounding box")
@@ -93,20 +93,20 @@ from matplotlib import ft2font
 
 
 #flipping distribution after normalization
-csv_name ="./csv/Princeton_remeshed_normalized_flipping.csv"
-plt_name = "Flipping distribution after normalization"
-plt.figure(2)
-df = pd.read_csv(csv_name)
-cx = df['flip_x'].value_counts()[1]
-cy = df['flip_y'].value_counts()[1]
-cz = df['flip_z'].value_counts()[1]
-print(cx,cy,cz)
-data = {'flip_x': cx, 'flip_y': cy, 'flip_z': cz}
-df = pd.Series(data)
-plt.bar(range(len(df)), df.values, align='center', color='plum', width = 0.3)
-plt.xticks(range(len(df)), df.index.values, size='small')
-plt.suptitle(plt_name, fontsize=fontsize)
-plt.ylabel("frequency")
-plt.xlabel("number of meshes with correct orientation in each dimension")
-plt.savefig("resample_plots/flipping_after")
-plt.show()
+# csv_name ="./csv/Princeton_remeshed_normalized_flipping.csv"
+# plt_name = "Flipping distribution after normalization"
+# plt.figure(2)
+# df = pd.read_csv(csv_name)
+# cx = df['flip_x'].value_counts()[1]
+# cy = df['flip_y'].value_counts()[1]
+# cz = df['flip_z'].value_counts()[1]
+# print(cx,cy,cz)
+# data = {'flip_x': cx, 'flip_y': cy, 'flip_z': cz}
+# df = pd.Series(data)
+# plt.bar(range(len(df)), df.values, align='center', color='plum', width = 0.3)
+# plt.xticks(range(len(df)), df.index.values, size='small')
+# plt.suptitle(plt_name, fontsize=fontsize)
+# plt.ylabel("frequency")
+# plt.xlabel("number of meshes with correct orientation in each dimension")
+# plt.savefig("resample_plots/flipping_after")
+# plt.show()
