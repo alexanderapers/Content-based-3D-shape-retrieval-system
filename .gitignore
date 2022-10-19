@@ -38,4 +38,6 @@ Princeton_face_area.csv
 Princeton_remeshed_face_area.csv
 
 Princeton/*
+Princeton_remeshed/*
+Princeton_remeshed_normalized/*
 *.icloud
