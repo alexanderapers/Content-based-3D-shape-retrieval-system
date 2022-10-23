@@ -21,14 +21,14 @@ fontsize =12
 
 
 #category histogram
-figure(figsize=(9, 9))
-df = pd.read_csv('csv/Princeton_basic_mesh_info.csv')
-df2 = df['category'].value_counts().plot(kind ='barh', color='plum')
-plt.ylabel('category')
-plt.xlabel('frequency')
-plt.title("Distribution by category")
-plt.savefig("resample_plots/categories", bbox_inches="tight")
-plt.show()
+# figure(figsize=(9, 9))
+# df = pd.read_csv('csv/Princeton_basic_mesh_info.csv')
+# df2 = df['category'].value_counts().plot(kind ='barh', color='plum')
+# plt.ylabel('category')
+# plt.xlabel('frequency')
+# plt.title("Distribution by category")
+# plt.savefig("resample_plots/categories", bbox_inches="tight")
+# plt.show()
 
 #faces histogram before
 # df = pd.read_csv('csv/Princeton_basic_mesh_info.csv')
