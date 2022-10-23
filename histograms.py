@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import pylab as pl
+from matplotlib.pyplot import figure
 
 fontsize =12
 
@@ -20,13 +21,14 @@ fontsize =12
 
 
 #category histogram
-# df = pd.read_csv('csv/Princeton_basic_mesh_info.csv')
-# df2 = df['category'].value_counts().plot(kind ='barh', color='plum')
-# plt.ylabel('category')
-# plt.xlabel('frequency')
-# plt.title("Distribution by category")
-# plt.savefig("resample_plots/categories")
-# plt.show()
+figure(figsize=(9, 9))
+df = pd.read_csv('csv/Princeton_basic_mesh_info.csv')
+df2 = df['category'].value_counts().plot(kind ='barh', color='plum')
+plt.ylabel('category')
+plt.xlabel('frequency')
+plt.title("Distribution by category")
+plt.savefig("resample_plots/categories", bbox_inches="tight")
+plt.show()
 
 #faces histogram before
 # df = pd.read_csv('csv/Princeton_basic_mesh_info.csv')
@@ -83,18 +85,18 @@ fontsize =12
 #plt.show()
 
 #scaling distribution before normalization
-csv_name ="./csv/Princeton_basic_mesh_info.csv"
-plt_name = "scale before normalization"
-df = pd.read_csv(csv_name)
-plt.hist(df["scale"][df["scale"] < 5], color='plum', bins=np.arange(0, 3, 0.05))
-plt.suptitle(plt_name, fontsize=fontsize)
-plt.xlim([0, 3])
-#plt.ylim([0, 220])
-#plt.axis([xmin, xmax, ymin, ymax])
-plt.ylabel("frequency")
-plt.xlabel("length of diagonal box of the axis aligned bounding box")
-plt.savefig("resample_plots/scaling_before")
-plt.show()
+# csv_name ="./csv/Princeton_basic_mesh_info.csv"
+# plt_name = "scale before normalization"
+# df = pd.read_csv(csv_name)
+# plt.hist(df["scale"][df["scale"] < 5], color='plum', bins=np.arange(0, 3, 0.05))
+# plt.suptitle(plt_name, fontsize=fontsize)
+# plt.xlim([0, 3])
+# #plt.ylim([0, 220])
+# #plt.axis([xmin, xmax, ymin, ymax])
+# plt.ylabel("frequency")
+# plt.xlabel("length of diagonal box of the axis aligned bounding box")
+# plt.savefig("resample_plots/scaling_before")
+# plt.show()
 
 
 
