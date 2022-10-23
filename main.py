@@ -14,6 +14,8 @@ if __name__ == "__main__":
     #dataset_remeshed_normalized.write_elementary_features()
 
     reorder_dataset(dataset_original)
+    reorder_dataset(dataset_remeshed)
+    reorder_dataset(dataset_remeshed_normalized)
     # i=0
     # for mesh in dataset_remeshed_normalized:
     #   Shape_Features_Mesh(mesh)
