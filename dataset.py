@@ -5,6 +5,7 @@ import numpy as np
 from os.path import join
 import trimesh
 from features_mesh import Features_Mesh
+from shape_features_mesh import Shape_Features_Mesh
 from tqdm import tqdm
 
 class Dataset:
@@ -75,6 +76,19 @@ class Dataset:
             writer.writerow(["mesh name", "area", "compactness", "AABB_volume", "diameter", "eccentricity"])
             for mesh in tqdm(self.make_all_meshes()):
                 writer.writerow(Features_Mesh(mesh).get_all_elementary_features())
+
+
+    def write_shape_features(self):
+        print("Writing shape features csv info of {}".format(self.folder_name_dataset))
+        if not os.path.exists(join(os.getcwd(), "features")):
+            os.mkdir("features")
+        with open(os.getcwd() + "/features/" + self.folder_name_dataset + "_shape_features.csv", "w") as conn:
+            writer = csv.writer(conn)
+            ft_names = [ft + "_" + str(i) for ft in ["A3", "D1", "D2", "D3", "D4"] for i in range(1, 11)]
+            writer.writerow(["mesh name", "category"] + ft_names)
+            for mesh in tqdm(self.make_all_meshes()):
+                writer.writerow(Shape_Features_Mesh(mesh).get_all_shape_features())
+
 
 
     def get_face_areas_in_bins(self, bins):

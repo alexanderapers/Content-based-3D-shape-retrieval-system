@@ -21,22 +21,25 @@ class Shape_Features_Mesh:
         self.D3 = self.get_D3()
         self.D4 = self.get_D4()
 
-        #hist, _ = np.histogram(self.A3, bins=np.arange(0, np.pi + np.pi/10, np.pi/10), weights=np.ones(len(self.A3)) / len(self.A3))
-        # print(self.A3)
-        # print(min(self.A3), max(self.A3))
-        # print()
-        # print(self.D1)
-        # print(min(self.D1), max(self.D1))
-        # print()
-        # print(self.D2)
-        # print(min(self.D2), max(self.D2))
-        # print()
-        # print(self.D3)
-        # print(min(self.D3), max(self.D3))
-        # print()
-        # print(self.D4)
-        # print(min(self.D4), max(self.D4))
-        # print()
+        # created 10 evenly spaced bins on interval [0, pi]
+        self.hist_A3, _ = np.histogram(self.A3, bins=np.arange(0, np.pi + np.pi/10, np.pi/10), weights=np.ones(len(self.A3)) / len(self.A3))
+
+        # 0.968 is highest occurring value. 95 percentile is 0.508
+        # created 9 evenly spaced bins on interval [0, 0.508]. 10th bin is [0.508, 1].
+        self.hist_D1, _ = np.histogram(self.D1, bins=self.get_bins(0, 0.508, 1, 10), weights=np.ones(len(self.D1)) / len(self.D1))
+
+        # 1.607 is highest occurring value. 95 percentile is 0.793
+        # created 9 evenly spaced bins on interval [0, 0.793]. 10th bin is [0.793, 1.732]
+        self.hist_D2, _ = np.histogram(self.D2, bins=self.get_bins(0, 0.793, 1.732, 10), weights=np.ones(len(self.D2)) / len(self.D2))
+
+        # 0.830 is highest occurring value. 95 percentile is 0.372
+        # created 9 evenly spaced bins on interval [0, 0.372]. 10th bin is [0.372, 0.9]
+        self.hist_D3, _ = np.histogram(self.D3, bins=self.get_bins(0, 0.372, 0.9, 10), weights=np.ones(len(self.D3)) / len(self.D3))
+
+        # 0.526 is highest occurring value. 95 percentile is 0.206
+        # created 9 evenly spaced bins on interval [0, 0.206]. 10th bin is [0.206, 0.6]
+        self.hist_D4, _ = np.histogram(self.D4, bins=self.get_bins(0, 0.206, 0.6, 10), weights=np.ones(len(self.D4)) / len(self.D4))
+
         #print("--- %s seconds ---" % (time.time() - start_time))
 
 
@@ -65,17 +68,14 @@ class Shape_Features_Mesh:
 
 
     def get_D1(self):
-        # theoretical maximum: sqrt(3) / 2
         return np.sqrt(np.sum(np.square(self.points1), axis=1))
 
 
     def get_D2(self):
-        # theoretical maximum: sqrt(3)
         return np.sqrt(np.sum(np.square(self.points1 - self.points2), axis=1))
 
 
     def get_D3(self):
-        # theoretical maximum: sqrt(2) / 2
         edge1 = self.points1 - self.points2
         edge2 = self.points3 - self.points2
 
@@ -128,3 +128,12 @@ class Shape_Features_Mesh:
     def turn_off_logger(self):
         L = logging.getLogger("trimesh")
         L.setLevel(logging.ERROR)
+
+
+    def get_bins(self, min_value, percentile95, max_value, n_bins):
+        return np.concatenate([np.arange(min_value, percentile95+percentile95/(n_bins-1), percentile95/(n_bins-1)),
+         np.array([max_value])])
+
+
+    def get_all_shape_features(self):
+        return [self.mesh.name, self.mesh.category] + list(np.concatenate([self.hist_A3, self.hist_D1, self.hist_D2, self.hist_D3, self.hist_D4]))
