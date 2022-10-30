@@ -8,6 +8,7 @@ Dependencies:
 - pillow
 - shapely
 - open3d (requires python 3.9 or lower)
+- numba
 
 To visualise a mesh run like this:  
 **python main.py mesh_name**  
