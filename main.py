@@ -16,7 +16,7 @@ if __name__ == "__main__":
     #dataset_remeshed_normalized.write_shape_features()
     #dataset_remeshed_normalized.write_all_features_normalized()
 
-    Distance(dataset_remeshed_normalized)
+    #Distance(dataset_remeshed_normalized)
     #reorder_dataset(dataset_original)
     #reorder_dataset(dataset_remeshed)
     #reorder_dataset(dataset_remeshed_normalized)
