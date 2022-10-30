@@ -2,6 +2,7 @@ import sys
 from dataset import Dataset
 import face_area_plots
 from reorder import reorder_dataset
+import numpy as np
 
 if __name__ == "__main__":
     dataset_original = Dataset("Princeton", write_basic_csv = False, write_other_csv = False)
@@ -12,6 +13,7 @@ if __name__ == "__main__":
     dataset_remeshed_normalized.normalize()
     #dataset_remeshed_normalized.write_elementary_features()
     #dataset_remeshed_normalized.write_shape_features()
+    #dataset_remeshed_normalized.write_all_features_normalized()
 
     #reorder_dataset(dataset_original)
     #reorder_dataset(dataset_remeshed)

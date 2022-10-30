@@ -136,4 +136,4 @@ class Shape_Features_Mesh:
 
 
     def get_all_shape_features(self):
-        return [self.mesh.name, self.mesh.category] + list(np.concatenate([self.hist_A3, self.hist_D1, self.hist_D2, self.hist_D3, self.hist_D4]))
+        return [self.mesh.name] + list(np.concatenate([self.hist_A3, self.hist_D1, self.hist_D2, self.hist_D3, self.hist_D4]))
