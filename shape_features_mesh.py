@@ -4,7 +4,8 @@ from trimesh.sample import sample_surface_even
 from trimesh.points import PointCloud
 import logging
 #import time
-import matplotlib.pyplot as plt
+#from numba import njit
+
 
 class Shape_Features_Mesh:
     def __init__(self, mesh, n_samples=6500, minimum_n_samples=2000):
@@ -15,11 +16,11 @@ class Shape_Features_Mesh:
         self.minimum_n_samples = minimum_n_samples
         self.get_all_points()
 
-        self.A3 = self.get_A3()
-        self.D1 = self.get_D1()
-        self.D2 = self.get_D2()
-        self.D3 = self.get_D3()
-        self.D4 = self.get_D4()
+        self.A3 = self.get_A3(self.points1, self.points2, self.points3)
+        self.D1 = self.get_D1(self.points1)
+        self.D2 = self.get_D2(self.points1, self.points2)
+        self.D3 = self.get_D3(self.points1, self.points2, self.points3)
+        self.D4 = self.get_D4(self.points1, self.points2, self.points3, self.points4)
 
         # created 10 evenly spaced bins on interval [0, pi]
         self.hist_A3, _ = np.histogram(self.A3, bins=np.arange(0, np.pi + np.pi/10, np.pi/10), weights=np.ones(len(self.A3)) / len(self.A3))
@@ -52,10 +53,12 @@ class Shape_Features_Mesh:
         return PointCloud(samples)
 
 
-    def get_A3(self):
+    @staticmethod
+    #@njit()
+    def get_A3(points1, points2, points3):
         # theoretical maximum: np.pi
-        edge1 = self.points1 - self.points2
-        edge2 = self.points3 - self.points2
+        edge1 = points1 - points2
+        edge2 = points3 - points2
 
         dot = np.sum(edge1*edge2, axis=1)
         norm_edge1 = np.linalg.norm(edge1, axis=1)
@@ -67,27 +70,35 @@ class Shape_Features_Mesh:
         return angles
 
 
-    def get_D1(self):
-        return np.sqrt(np.sum(np.square(self.points1), axis=1))
+    @staticmethod
+    #@njit()
+    def get_D1(points1):
+        return np.sqrt(np.sum(np.square(points1), axis=1))
 
 
-    def get_D2(self):
-        return np.sqrt(np.sum(np.square(self.points1 - self.points2), axis=1))
+    @staticmethod
+    #@njit()
+    def get_D2(points1, points2):
+        return np.sqrt(np.sum(np.square(points1 - points2), axis=1))
 
 
-    def get_D3(self):
-        edge1 = self.points1 - self.points2
-        edge2 = self.points3 - self.points2
+    @staticmethod
+    #@njit()
+    def get_D3(points1, points2, points3):
+        edge1 = points1 - points2
+        edge2 = points3 - points2
 
         cross = np.cross(edge1, edge2)
         return np.sqrt(np.linalg.norm(cross, axis=1) / 2)
 
 
-    def get_D4(self):
+    @staticmethod
+    #@njit()
+    def get_D4(points1, points2, points3, points4):
         # i guess it's always less than 1/2
-        ad = self.points1 - self.points4
-        bd = self.points2 - self.points4
-        cd = self.points3 - self.points4
+        ad = points1 - points4
+        bd = points2 - points4
+        cd = points3 - points4
         volume = np.abs(np.sum(ad * np.cross(bd, cd), axis=1)) / 6
 
         return np.cbrt(volume)
@@ -110,10 +121,10 @@ class Shape_Features_Mesh:
     #     np.random.shuffle(self.points4)
 
     def get_all_points(self):
-        self.points1 = np.random.permutation(self.get_pointcloud().vertices)
-        self.points2 = np.random.permutation(self.get_pointcloud().vertices)
-        self.points3 = np.random.permutation(self.get_pointcloud().vertices)
-        self.points4 = np.random.permutation(self.get_pointcloud().vertices)
+        self.points1 = self.permute(self.get_pointcloud().vertices)
+        self.points2 = self.permute(self.get_pointcloud().vertices)
+        self.points3 = self.permute(self.get_pointcloud().vertices)
+        self.points4 = self.permute(self.get_pointcloud().vertices)
         cutoff = min(len(self.points1), len(self.points2), len(self.points3), len(self.points4))
         self.points1 = self.points1[:cutoff]
         self.points2 = self.points2[:cutoff]
@@ -130,7 +141,15 @@ class Shape_Features_Mesh:
         L.setLevel(logging.ERROR)
 
 
-    def get_bins(self, min_value, percentile95, max_value, n_bins):
+    @staticmethod
+    #@njit()
+    def permute(inp):
+        return np.random.permutation(inp)
+
+
+    @staticmethod
+    #@njit()
+    def get_bins(min_value, percentile95, max_value, n_bins):
         return np.concatenate([np.arange(min_value, percentile95+percentile95/(n_bins-1), percentile95/(n_bins-1)),
          np.array([max_value])])
 

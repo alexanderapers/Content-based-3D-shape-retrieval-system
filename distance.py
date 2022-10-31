@@ -1,25 +1,28 @@
+import time
 import csv
 import numpy as np
-from numba import njit
-import time
+#from numba import njit
+from mesh import Mesh
+from features_mesh import Features_Mesh
+from shape_features_mesh import Shape_Features_Mesh
 
 
 class Distance:
-    def __init__(self, dataset):
-        self.dataset = dataset
-        self.csv = "features/" + dataset.folder_name_dataset + "_all_features_normalized.csv"
+    def __init__(self, dataset_name, exclude_list):
+        self.csv = "features/" + dataset_name + "_all_features_normalized.csv"
         self.features = self.csv_to_dict()
-
+        self.exclude_list = exclude_list
+        #self.elem_features = read_csv("features/" + dataset_name + "_elementary_features.csv")
+        self.norm_info = np.load("norm_info.npy")
         # compiling numba
-        self.manhatten(np.array([1.0]), np.array([1.0]))
-        self.euclidean(np.array([1.0]), np.array([1.0]))
-        self.cosine(np.array([1.0]), np.array([1.0]))
+        #self.manhatten(np.array([1.0]), np.array([1.0]))
+        #self.euclidean(np.array([1.0]), np.array([1.0]))
+        #self.cosine(np.array([1.0]), np.array([1.0]))
 
         start_time = time.perf_counter()
-        for mesh_name in self.features.keys():
-            if mesh_name not in self.dataset.exclude_list:
-                self.distance("m1.ply", mesh_name, self.cosine)
-                #print(mesh_name, self.distance("m1.ply", mesh_name, self.manhatten))
+        query_mesh = self.meshify("LabeledDB_new/Octopus/121.off")
+        query_features = self.extract_features_mesh(query_mesh)
+        self.find_k_most_similar(query_features, self.euclidean, k=10)
         print("--- %s seconds ---" % (time.perf_counter() - start_time))
 
 
@@ -41,20 +44,41 @@ class Distance:
         return metric(a, b)
 
 
+    def meshify(self, query_mesh_file_path):
+        mesh = Mesh(query_mesh_file_path)
+        mesh.resample_mesh()
+        mesh.normalize_mesh()
+        return mesh
+
+
+    def extract_features_mesh(self, query_mesh):
+        elem_features = Features_Mesh(query_mesh).get_all_elementary_features()
+        shape_features = Shape_Features_Mesh(query_mesh).get_all_shape_features()
+        elem_features[2:] = (elem_features[2:] - self.norm_info[:, 0]) / self.norm_info[:, 1]
+        return np.array(elem_features[2:] + shape_features[1:])
+
+
+    def find_k_most_similar(self, query_features, metric, k=10):
+        distances = {x: 0 for x in self.features}
+        for mesh_name in self.features:
+            distances[mesh_name] = metric(query_features, self.features[mesh_name])
+        return sorted(distances.items(), key=lambda item: item[1])[:k]
+
+
     @staticmethod
-    @njit()
+    #@njit()
     def euclidean(mesh_features_1, mesh_features_2):
         return np.linalg.norm(mesh_features_1 - mesh_features_2)
 
 
     @staticmethod
-    @njit()
+    #@njit()
     def manhatten(mesh_features_1, mesh_features_2):
         return np.sum(np.abs(mesh_features_1 - mesh_features_2))
 
 
     @staticmethod
-    @njit()
+    #@njit()
     def cosine(mesh_features_1, mesh_features_2):
         norm_1 = np.linalg.norm(mesh_features_1)
         norm_2 = np.linalg.norm(mesh_features_2)

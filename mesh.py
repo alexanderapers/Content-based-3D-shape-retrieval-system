@@ -1,12 +1,12 @@
 import trimesh
-from trimesh.exchange.export import export_mesh
+#from trimesh.exchange.export import export_mesh
 import numpy as np
-from trimesh.repair import fill_holes
-from trimesh.repair import fix_inversion
-from trimesh.repair import fix_normals
-from trimesh.repair import fix_winding
-from trimesh.repair import broken_faces
-from trimesh.repair import stitch
+from trimesh.repair import fill_holes, fix_normals
+#from trimesh.repair import fix_inversion
+#from trimesh.repair import fix_winding
+#from trimesh.repair import broken_faces
+#from trimesh.repair import stitch
+#from numba import njit
 #import open3d as o3d
 
 class Mesh:
@@ -17,12 +17,12 @@ class Mesh:
         self.mesh = trimesh.load(mesh_file_path)
         self.n_vertices = self.get_n_vertices()
         self.n_faces = self.get_n_faces()
-        self.bounding_box = trimesh.bounds.corners(self.mesh.bounds)
+        #self.bounding_box = trimesh.bounds.corners(self.mesh.bounds)
         self.centroid = self.mesh.centroid
-        self.d_centroid_origin = self.get_distance_centroid_origin()
-        self.alignment = self.get_alignment()
-        self.scale = self.get_scale()
-        self.flip = self.get_flip()
+        #self.d_centroid_origin = self.get_distance_centroid_origin(self.centroid)
+        #self.alignment = self.get_alignment(self.get_vertices())
+        #self.scale = self.get_scale(self.mesh.extents)
+        #self.flip = self.get_flip()
 
     def show(self):
         self.mesh.show()
@@ -43,8 +43,8 @@ class Mesh:
     def subdivide(self):
         self.mesh = self.mesh.subdivide()
         self.centroid = self.mesh.centroid
-        self.d_centroid_origin = self.get_distance_centroid_origin()
-        self.scale = self.get_scale()
+        self.d_centroid_origin = self.get_distance_centroid_origin(self.centroid)
+        self.scale = self.get_scale(self.mesh.extents)
         self.n_vertices = self.get_n_vertices()
         self.n_faces = self.get_n_faces()
 
@@ -54,8 +54,8 @@ class Mesh:
         self.mesh = self.mesh.subdivide_to_size(np.sum(self.mesh.extents ** 2), max_iter=1000)
         #self.mesh = trimesh.base.Trimesh(vertices = vertices, faces = new_faces)
         self.centroid = self.mesh.centroid
-        self.d_centroid_origin = self.get_distance_centroid_origin()
-        self.scale = self.get_scale()
+        self.d_centroid_origin = self.get_distance_centroid_origin(self.centroid)
+        self.scale = self.get_scale(self.mesh.extents)
         self.n_vertices = self.get_n_vertices()
         self.n_faces = self.get_n_faces()
 
@@ -63,8 +63,8 @@ class Mesh:
     def decimation(self):
         self.mesh = self.mesh.simplify_quadratic_decimation(3500)
         self.centroid = self.mesh.centroid
-        self.d_centroid_origin = self.get_distance_centroid_origin()
-        self.scale = self.get_scale()
+        self.d_centroid_origin = self.get_distance_centroid_origin(self.centroid)
+        self.scale = self.get_scale(self.mesh.extents)
         self.n_vertices = self.get_n_vertices()
         self.n_faces = self.get_n_faces()
 
@@ -72,8 +72,8 @@ class Mesh:
         self.mesh.apply_transform(matrix)
         self.bounding_box = trimesh.bounds.corners(self.mesh.bounds)
         self.centroid = self.mesh.centroid
-        self.d_centroid_origin = self.get_distance_centroid_origin()
-        self.scale = self.get_scale()
+        self.d_centroid_origin = self.get_distance_centroid_origin(self.centroid)
+        self.scale = self.get_scale(self.mesh.extents)
 
     def transform_vertices(self, matrix):
         new_vertices = []
@@ -81,28 +81,38 @@ class Mesh:
             new_vertices.append(np.dot(matrix, v))
 
         self.mesh = trimesh.base.Trimesh(vertices = new_vertices, faces = self.mesh.faces)
-        fix_inversion(self.mesh)
+        #fix_inversion(self.mesh)
         self.bounding_box = trimesh.bounds.corners(self.mesh.bounds)
         self.centroid = self.mesh.centroid
-        self.d_centroid_origin = self.get_distance_centroid_origin()
-        self.scale = self.get_scale()
+        self.d_centroid_origin = self.get_distance_centroid_origin(self.centroid)
+        self.scale = self.get_scale(self.mesh.extents)
 
     def normalize_scale(self):
         self.mesh.apply_scale(1.0 / max(self.mesh.extents))
-        self.scale = self.get_scale()
+        self.scale = self.get_scale(self.mesh.extents)
         #print(1.0/max(self.mesh.extents))
         self.bounding_box = trimesh.bounds.corners(self.mesh.bounds)
         self.centroid = self.mesh.centroid
-        self.d_centroid_origin = self.get_distance_centroid_origin()
+        self.d_centroid_origin = self.get_distance_centroid_origin(self.centroid)
 
-    def normalize_flipping(self):
+
+    @staticmethod
+    #@njit()
+    def normalize_flipping_np(verts):
         I = np.eye(4)
         for i in range(3):
-            coords = self.get_vertices()[:,i]
+            coords = verts[:,i]
             flip = np.sign(np.sum(np.sign(coords) * (coords ** 2)))
             I[i, i] = flip
+
+        return I
+
+
+    def normalize_flipping(self):
+        I = self.normalize_flipping_np(self.get_vertices())
         self.apply_transform(I)
         self.flip = self.get_flip()
+
 
     def normalize_translation(self):
         # First, we set barycenter on origin.
@@ -110,17 +120,29 @@ class Mesh:
         transformMatrix = trimesh.transformations.translation_matrix(transformVector)
         self.apply_transform(transformMatrix)
 
-    def normalize_alignment(self):
+
+    @staticmethod
+    #@njit()
+    def normalize_alignment_np(verts):
         # Calculate covariance and eigenvectors...
-        covariance = np.cov(np.transpose(self.get_vertices()))
+        covariance = np.cov(np.transpose(verts))
         eigenvalues, eigenvectors = np.linalg.eig(covariance)
 
         idx = eigenvalues.argsort()[::-1]
         sorted_eigenvectors = eigenvectors[:,idx]
         sorted_eigenvectors[:, 2] = np.cross(sorted_eigenvectors[:, 0], sorted_eigenvectors[:, 1])
-        sorted_eigenvectors = sorted_eigenvectors.T
-        sorted_eigenvectors_homo = np.hstack([np.vstack([sorted_eigenvectors, np.array([0,0,0])]), np.array([[0],[0],[0],[1]])])
+        #sorted_eigenvectors = sorted_eigenvectors.T
+        sorted_eigenvectors_homo = np.zeros(shape=(4,4))
+        sorted_eigenvectors_homo[:3,:3] = sorted_eigenvectors.T
+        sorted_eigenvectors_homo[3,3] = 1.0
+        return sorted_eigenvectors_homo
+        #sorted_eigenvectors_homo = np.hstack([np.vstack([sorted_eigenvectors, np.array([0,0,0])]), np.array([[0],[0],[0],[1]])])
+
+
+    def normalize_alignment(self):
+        sorted_eigenvectors_homo = self.normalize_alignment_np(self.get_vertices())
         self.apply_transform(sorted_eigenvectors_homo)
+
 
     def get_n_vertices(self):
         return self.mesh.vertices.shape[0]
@@ -139,8 +161,10 @@ class Mesh:
         export_mesh(self.mesh, file_path, self.name.split(".")[-1])
 
 
-    def get_distance_centroid_origin(self):
-        return sum(self.centroid * self.centroid) ** 0.5
+    @staticmethod
+    #@njit()
+    def get_distance_centroid_origin(centroid):
+        return np.linalg.norm(centroid)
 
 
     def is_normalised(self, verbose=True):
@@ -173,16 +197,20 @@ class Mesh:
         return True
 
 
-    def get_alignment(self):
-        covariance = np.cov(np.transpose(self.get_vertices()))
+    @staticmethod
+    #@njit()
+    def get_alignment(verts):
+        covariance = np.cov(np.transpose(verts))
         eigenvalues, eigenvectors = np.linalg.eig(covariance)
         idx = eigenvalues.argsort()[::-1]
         sorted_eigenvectors = eigenvectors[:,idx]
-        return np.absolute(np.diagonal(sorted_eigenvectors))
+        return np.absolute(np.diag(sorted_eigenvectors))
 
 
-    def get_scale(self):
-        return np.sqrt(np.sum(self.mesh.extents ** 2))
+    @staticmethod
+    #@njit()
+    def get_scale(extents):
+        return np.sqrt(np.sum(extents ** 2))
 
 
     def get_face_areas_in_bins(self, bins):
@@ -195,24 +223,40 @@ class Mesh:
             transformVector = -new_mesh.centroid
             transformMatrix = trimesh.transformations.translation_matrix(transformVector)
             new_mesh.apply_transform(transformMatrix)
-            covariance = np.cov(np.transpose(new_mesh.vertices))
-            eigenvalues, eigenvectors = np.linalg.eig(covariance)
-            idx = eigenvalues.argsort()[::-1]
-            sorted_eigenvectors = eigenvectors[:,idx]
-            sorted_eigenvectors[:, 2] = np.cross(sorted_eigenvectors[:, 0], sorted_eigenvectors[:, 1])
-            sorted_eigenvectors = sorted_eigenvectors.T
-            sorted_eigenvectors_homo = np.hstack([np.vstack([sorted_eigenvectors, np.array([0,0,0])]), np.array([[0],[0],[0],[1]])])
+            sorted_eigenvectors_homo = self.three_step_normalize(new_mesh.vertices)
             new_mesh.apply_transform(sorted_eigenvectors_homo)
             new_mesh.apply_scale(1.0 / max(new_mesh.extents))
         else:
             new_mesh = self.mesh
 
+        return self.calculate_flip_after_norm(new_mesh.vertices)
+
+
+    @staticmethod
+    #@njit()
+    def calculate_flip_after_norm(verts):
         flips = np.zeros(shape=3)
         for i in range(3):
-            coords = new_mesh.vertices[:,i]
+            coords = verts[:,i]
             flip = np.sign(np.sum(np.sign(coords) * (coords ** 2)))
             flips[i] = flip
         return flips
+
+
+    @staticmethod
+    #@njit()
+    def three_step_normalize(verts):
+        covariance = np.cov(np.transpose(verts))
+        eigenvalues, eigenvectors = np.linalg.eig(covariance)
+        idx = eigenvalues.argsort()[::-1]
+        sorted_eigenvectors = eigenvectors[:,idx]
+        sorted_eigenvectors[:, 2] = np.cross(sorted_eigenvectors[:, 0], sorted_eigenvectors[:, 1])
+        sorted_eigenvectors_homo = np.zeros(shape=(4,4))
+        sorted_eigenvectors_homo[:3,:3] = sorted_eigenvectors.T
+        sorted_eigenvectors_homo[3,3] = 1.0
+        return sorted_eigenvectors_homo
+        #sorted_eigenvectors_homo = np.hstack([np.vstack([sorted_eigenvectors, np.array([0,0,0])]), np.array([[0],[0],[0],[1]])])
+
 
 
     def get_face_areas(self):
@@ -225,3 +269,18 @@ class Mesh:
         fix_normals(self.mesh, multibody=True)
         #faces = broken_faces(self.mesh)
         #stitch(self.mesh, faces=faces)
+
+
+    def resample_mesh(self):
+        self.subdivide_to_size()
+        while self.n_vertices < 1000:
+            self.subdivide()
+        self.decimation()
+
+
+    def normalize_mesh(self):
+        self.fix_mesh()
+        self.normalize_translation()
+        self.normalize_alignment()
+        self.normalize_scale()
+        self.normalize_flipping()

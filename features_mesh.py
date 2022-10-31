@@ -1,6 +1,7 @@
 import trimesh
 import numpy as np
-from numba import njit
+from scipy.spatial.distance import cdist
+#from numba import njit
 
 class Features_Mesh:
     def __init__(self, mesh):
@@ -22,24 +23,17 @@ class Features_Mesh:
 
 
     @staticmethod
-    @njit()
+    #@njit()
     def conv_hull_diameter(verts):
-        max_dist = 0
-        for v1 in verts:
-            for v2 in verts:
-                if (v1 != v2).any():
-                    dist = np.linalg.norm(v1 - v2)
-                    if dist > max_dist:
-                        max_dist = dist
-        return max_dist
+        return np.max(cdist(verts, verts, metric="euclidean"))
 
 
     @staticmethod
-    @njit()
+    #@njit()
     def get_eccentricity_mesh(verts):
         covariance = np.cov(np.transpose(verts))
         eigenvalues, eigenvectors = np.linalg.eig(covariance)
-        if np.min(eigenvalues) != 0:
+        if np.min(eigenvalues) >= 1e-5:
             return np.max(eigenvalues) / np.min(eigenvalues)
         else:
             return 0
@@ -65,4 +59,4 @@ class Features_Mesh:
 
 
     def get_all_elementary_features(self):
-        return [self.mesh.name, self.area, self.compactness, self.AABB_volume, self.diameter, self.eccentricity]
+        return [self.mesh.name, self.mesh.category, self.area, self.compactness, self.AABB_volume, self.diameter, self.eccentricity]
