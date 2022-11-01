@@ -22,7 +22,8 @@ class Distance:
         #self.euclidean(np.array([1.0]), np.array([1.0]))
         #self.cosine(np.array([1.0]), np.array([1.0]))
 
-        self.query("LabeledDB_new/Octopus/121.off", self.euclidean, k=10)
+        # print this to see result of query
+        self.query("LabeledDB_new/Octopus/121.off", self.euclidean_EMD, k=10)
 
 
     def query(self, mesh_file_path, metric, k=10):
@@ -91,3 +92,19 @@ class Distance:
         norm_1 = np.linalg.norm(mesh_features_1)
         norm_2 = np.linalg.norm(mesh_features_2)
         return 1 - (np.dot(mesh_features_1, mesh_features_2) / (norm_1 * norm_2))
+
+
+    @staticmethod
+    #@njit()
+    def euclidean_EMD(mesh_features_1, mesh_features_2):
+        distances = np.zeros(6)
+        elem_distance = Distance.euclidean(mesh_features_1[:5], mesh_features_2[:5])
+        distances[0] = elem_distance
+        j = 1
+        for i in range(5, 55, 10):
+            # TODO check if bins number should start from 0 or 1
+            hist_distance = wasserstein_distance(np.arange(10), np.arange(10),
+                mesh_features_1[i:i+10], mesh_features_2[i:i+10])
+            distances[j] = hist_distance
+            j += 1
+        return np.mean(distances)
