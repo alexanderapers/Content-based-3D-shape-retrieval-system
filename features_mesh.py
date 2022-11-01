@@ -33,10 +33,7 @@ class Features_Mesh:
     def get_eccentricity_mesh(verts):
         covariance = np.cov(np.transpose(verts))
         eigenvalues, eigenvectors = np.linalg.eig(covariance)
-        if np.min(eigenvalues) >= 1e-5:
-            return np.max(eigenvalues) / np.min(eigenvalues)
-        else:
-            return 0
+        return min(np.max(eigenvalues) / np.min(eigenvalues), 1_000)
 
 
     def get_volume_mesh(self):
