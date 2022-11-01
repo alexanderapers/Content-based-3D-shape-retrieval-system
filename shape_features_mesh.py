@@ -14,7 +14,7 @@ class Shape_Features_Mesh:
         self.mesh = mesh
         self.n_samples = n_samples
         self.minimum_n_samples = minimum_n_samples
-        self.get_all_points()
+        self.cutoff = self.get_all_points()
 
         self.A3 = self.get_A3(self.points1, self.points2, self.points3)
         self.D1 = self.get_D1(self.points1)
@@ -130,6 +130,7 @@ class Shape_Features_Mesh:
         self.points2 = self.points2[:cutoff]
         self.points3 = self.points3[:cutoff]
         self.points4 = self.points4[:cutoff]
+        return cutoff
         # i = 0
         # while not self.validate_points():
         #     self.reshuffle()
