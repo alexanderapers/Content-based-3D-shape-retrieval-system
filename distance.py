@@ -5,6 +5,7 @@ import numpy as np
 from mesh import Mesh
 from features_mesh import Features_Mesh
 from shape_features_mesh import Shape_Features_Mesh
+from scipy.stats import wasserstein_distance
 
 
 class Distance:
@@ -12,18 +13,25 @@ class Distance:
         self.csv = "features/" + dataset_name + "_all_features_normalized.csv"
         self.features = self.csv_to_dict()
         self.exclude_list = exclude_list
-        #self.elem_features = read_csv("features/" + dataset_name + "_elementary_features.csv")
         self.norm_info = np.load("norm_info.npy")
+        # edit this to tweak weights
+        self.weights = np.concatenate([np.repeat(1/10, 5), np.repeat(1/100, 50)])
+
         # compiling numba
         #self.manhatten(np.array([1.0]), np.array([1.0]))
         #self.euclidean(np.array([1.0]), np.array([1.0]))
         #self.cosine(np.array([1.0]), np.array([1.0]))
 
+        self.query("LabeledDB_new/Octopus/121.off", self.euclidean, k=10)
+
+
+    def query(self, mesh_file_path, metric, k=10):
         start_time = time.perf_counter()
-        query_mesh = self.meshify("LabeledDB_new/Octopus/121.off")
+        query_mesh = self.meshify(mesh_file_path)
         query_features = self.extract_features_mesh(query_mesh)
-        self.find_k_most_similar(query_features, self.euclidean, k=10)
+        result = self.find_k_most_similar(query_features, metric, k)
         print("--- %s seconds ---" % (time.perf_counter() - start_time))
+        return result
 
 
     def csv_to_dict(self):
@@ -39,8 +47,8 @@ class Distance:
 
 
     def distance(self, mesh_name_1, mesh_name_2, metric):
-        a = self.features[mesh_name_1]
-        b = self.features[mesh_name_2]
+        a = self.weights * self.features[mesh_name_1]
+        b = self.weights * self.features[mesh_name_2]
         return metric(a, b)
 
 
