@@ -7,10 +7,14 @@ import trimesh
 from features_mesh import Features_Mesh
 from shape_features_mesh import Shape_Features_Mesh
 from tqdm import tqdm
+import pandas as pd
+from scipy import stats
+
 
 class Dataset:
     def __init__(self, folder_name_dataset, write_basic_csv=False, write_other_csv=False):
         self.folder_name_dataset = folder_name_dataset
+        self.exclude_list = ["m1693.ply"]
         #self.meshes_file_paths = self.get_all_meshes_file_paths()
         #self.meshes = self.make_all_meshes()
         if write_basic_csv:
@@ -75,7 +79,8 @@ class Dataset:
             writer = csv.writer(conn)
             writer.writerow(["mesh name", "area", "compactness", "AABB_volume", "diameter", "eccentricity"])
             for mesh in tqdm(self.make_all_meshes()):
-                writer.writerow(Features_Mesh(mesh).get_all_elementary_features())
+                if mesh.name not in self.exclude_list:
+                    writer.writerow(Features_Mesh(mesh).get_all_elementary_features())
 
 
     def write_shape_features(self):
@@ -85,10 +90,44 @@ class Dataset:
         with open(os.getcwd() + "/features/" + self.folder_name_dataset + "_shape_features.csv", "w") as conn:
             writer = csv.writer(conn)
             ft_names = [ft + "_" + str(i) for ft in ["A3", "D1", "D2", "D3", "D4"] for i in range(1, 11)]
-            writer.writerow(["mesh name", "category"] + ft_names)
+            writer.writerow(["mesh name"] + ft_names)
             for mesh in tqdm(self.make_all_meshes()):
-                writer.writerow(Shape_Features_Mesh(mesh).get_all_shape_features())
+                if mesh.name not in self.exclude_list:
+                    writer.writerow(Shape_Features_Mesh(mesh).get_all_shape_features())
 
+
+    def write_all_features_normalized(self):
+        print("Writing all normalized features csv of {}".format(self.folder_name_dataset))
+        if not os.path.exists(join(os.getcwd(), "features")):
+            os.mkdir("features")
+        all_features_file_path = os.getcwd() + "/features/" + self.folder_name_dataset + "_all_features_normalized.csv"
+        elem_features_file_path = os.getcwd() + "/features/" + self.folder_name_dataset + "_elementary_features.csv"
+        shape_features_file_path = os.getcwd() + "/features/" + self.folder_name_dataset + "_shape_features.csv"
+
+        a = pd.read_csv(elem_features_file_path)
+        b = pd.read_csv(shape_features_file_path)
+        merged = a.merge(b, on='mesh name')
+        merged.to_csv(all_features_file_path, index=False)
+
+        df = pd.read_csv(all_features_file_path)
+        old_order = list(df.columns)
+        ft_names = [ft + "_" + str(i) for ft in ["A3", "D1", "D2", "D3", "D4"] for i in range(1, 11)]
+        new_order = ["mesh name", "category", "area", "compactness", "AABB_volume", "diameter", "eccentricity"] + ft_names
+        df_reorder = df[new_order]
+        df_reorder.to_csv(all_features_file_path, index=False)
+        self.normalize_features_csv()
+
+
+    def normalize_features_csv(self):
+        print("Normalizing...")
+        all_features_file_path = os.getcwd() + "/features/" + self.folder_name_dataset + "_all_features_normalized.csv"
+        features = pd.read_csv(all_features_file_path)
+        features['area'] = stats.zscore(features['area'])
+        features['compactness'] = stats.zscore(features['compactness'])
+        features['AABB_volume'] = stats.zscore(features['AABB_volume'])
+        features['diameter'] = stats.zscore(features['diameter'])
+        features['eccentricity'] = stats.zscore(features['eccentricity'])
+        features.to_csv(all_features_file_path, index=False)
 
 
     def get_face_areas_in_bins(self, bins):
