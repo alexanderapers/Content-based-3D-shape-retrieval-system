@@ -22,9 +22,9 @@ To visualise a querying UI run like this:
 * create a folder named "meshes" and in this folder place meshes folders
 (I have Princeton, Princeton_remeshed,Princeton_remeshed_normalized right now)
 * make sure you have the PySimpleGUI3D folder, which is taken from Github (https://github.com/EdwardChamberlain/PySimpleGUI-3D-Viewer) for some dependencies: 
-      - object reader to read the object (changed to read .ply)
-      - the planar projection camera to render the 3D objects 
-      - the function refresh view (a simple function to update the graphs which is changed too)
+      * object reader to read the object (changed to read .ply)
+      * the planar projection camera to render the 3D objects 
+      * the function refresh view (a simple function to update the graphs which is changed too)
       
 * run "pip install -r requirements.txt"
 * run "python main_gui.py"
