@@ -6,6 +6,7 @@ from mesh import Mesh
 from features_mesh import Features_Mesh
 from shape_features_mesh import Shape_Features_Mesh
 from scipy.stats import wasserstein_distance
+from scipy.special import rel_entr
 
 
 class Distance:
@@ -16,14 +17,14 @@ class Distance:
         self.norm_info = np.load("norm_info.npy")
         # edit this to tweak weights
         self.weights = np.concatenate([np.repeat(1/10, 5), np.repeat(1/100, 50)])
-
         # compiling numba
         #self.manhatten(np.array([1.0]), np.array([1.0]))
         #self.euclidean(np.array([1.0]), np.array([1.0]))
         #self.cosine(np.array([1.0]), np.array([1.0]))
 
         # print this to see result of query
-        # result = self.query("LabeledDB_new/Octopus/121.off", self.euclidean_EMD, k=10)
+        # result = self.query("LabeledDB_new/Octopus/121.off", self.mahalanobis, k=10)
+        # print(result)
 
         # for r, d in result:
         #     print(r, d)
@@ -73,7 +74,7 @@ class Distance:
     def find_k_most_similar(self, query_features, metric, k=10):
         distances = {x: 0 for x in self.features}
         for mesh_name in self.features:
-            distances[mesh_name] = metric(query_features, self.features[mesh_name])
+            distances[mesh_name] = metric(self.weights * query_features, self.weights * self.features[mesh_name])
         return sorted(distances.items(), key=lambda item: item[1])[:k]
 
 
@@ -105,9 +106,41 @@ class Distance:
         distances[0] = elem_distance
         j = 1
         for i in range(5, 55, 10):
-            # TODO check if bins number should start from 0 or 1
             hist_distance = wasserstein_distance(np.arange(10), np.arange(10),
                 mesh_features_1[i:i+10], mesh_features_2[i:i+10])
             distances[j] = hist_distance
             j += 1
         return np.mean(distances)
+
+
+    @staticmethod
+    #njit()
+    def euclidean_KL(mesh_features_1, mesh_features_2):
+        distances = np.zeros(6)
+        elem_distance = Distance.euclidean(mesh_features_1[:5], mesh_features_2[:5])
+        distances[0] = elem_distance
+        j = 1
+        for i in range(5, 55, 10):
+            hist_distance = Distance.symm_KL(mesh_features_1[i:i+10], mesh_features_2[i:i+10])
+            distances[j] = hist_distance
+            j += 1
+        return np.mean(distances)
+
+
+    @staticmethod
+    #njit()
+    def symm_KL(mesh_features_1, mesh_features_2):
+        return np.sum(rel_entr(mesh_features_1, mesh_features_2) + rel_entr(mesh_features_2, mesh_features_1))
+
+
+    def mahalanobis(self, mesh_features_1, mesh_features_2):
+        if not hasattr(self, 'inv_covariance'):
+            all_vectors = []
+            for mesh_name in self.features:
+                all_vectors.append(self.features[mesh_name])
+
+            cov = np.cov(np.stack(all_vectors).T)
+            self.inv_covariance = np.linalg.pinv(cov)
+
+        diff = mesh_features_1 - mesh_features_2
+        return (diff @ self.inv_covariance @ diff) ** 0.5
