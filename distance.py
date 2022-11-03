@@ -23,7 +23,10 @@ class Distance:
         #self.cosine(np.array([1.0]), np.array([1.0]))
 
         # print this to see result of query
-        self.query("LabeledDB_new/Octopus/121.off", self.euclidean_EMD, k=10)
+        result = self.query("LabeledDB_new/Octopus/121.off", self.euclidean_EMD, k=10)
+
+        for r, d in result:
+            print(r, d)
 
 
     def query(self, mesh_file_path, metric, k=10):
