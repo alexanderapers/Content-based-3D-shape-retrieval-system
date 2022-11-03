@@ -42,8 +42,8 @@ def correct_dimensions(obj):
             new_vertices[i][j] = vert[idx]
     obj.verts = new_vertices
     return obj
-      
-        
+
+
 def refresh_view(RENDER_MODE,objects,nums=None):
     if nums is None:
         nums = list(range(6))
@@ -109,7 +109,7 @@ ds = Dataset("Princeton_remeshed_normalized", write_basic_csv = False, write_oth
 dist = Distance("Princeton_remeshed_normalized", ["m1693.ply"])
 
 #keep these default values for now because it prefills objects[] even though it is cursed af
-main_path = get_path(['.','meshes','Princeton','aircraft'])
+main_path = get_path(['.','Princeton','aircraft'])
 meshes_names = ['m1139.ply','m1127.ply','m1119.ply','m1149.ply','m1159.ply','m1169.ply']
 
 nums = len(meshes_names)
@@ -124,7 +124,7 @@ sg.theme('DarkAmber')
 GRAPH_SIZE = (100,100) if sg.running_trinket() else (150,150)
 
 def generate_element(st_idx,dist,text,i):
-    
+
     text_ele = [sg.Text(str(text),font=('Helvetica', 15))]
     graphs = [sg.Graph(GRAPH_SIZE, (-1, -1), (1, 1), 'black', float_values=True, enable_events=True, key=f'-GRAPH-{i}', drag_submits=True) ]
     dist_text = [sg.Text("dis="+str(dist),font=('Helvetica', 15),key=f'-DIST-{i}') if dist is not None else sg.Text("",font=('Helvetica', 15),key=f'-DIST-{i}') ]
@@ -148,7 +148,7 @@ while True:
         window.Finalize()
         # refresh_view('FACES',objects)
         first_time = False
-    
+
     event, values = window.read()
     print(event)
     if event == sg.WIN_CLOSED:
@@ -156,7 +156,7 @@ while True:
     elif event == "-REDNER_TYPE-":
         refresh_view(values['-REDNER_TYPE-'],objects)
     elif event == 'Submit':
-        
+
         # write code here
         path = values['-BROWSE-']
         print(path,os.sep)
@@ -168,15 +168,15 @@ while True:
         meshpaths = [ds.get_mesh_file_path(m) for m in meshes]
         print(meshes, meshpaths)
         dists = [i[1] for i in result]
-        
+
         objects[1:] = list(obj_reader.import_obj(p, rotation=('z', 0), translation=(0,0,0)) for p in meshpaths)
 
         refresh_view(values['-REDNER_TYPE-'],objects)
         # set the new distances
         for i in range(1,6):
             window[f'-DIST-{i}'].Update(f'dist={str(round(dists[i-1], 6))}')
-            
-        
+
+
     else:
         for i in range(nums):
             if event == f'-GRAPH-{i}':
@@ -184,7 +184,7 @@ while True:
 
                 if not drag_loc:
                     drag_loc = new_drag_location
-                
+
                 objects[i].orientation += (drag_loc[0] - new_drag_location[0]) * 360
                 objects[i].position[0] += (drag_loc[1] - new_drag_location[1]) * -10
 
@@ -193,12 +193,12 @@ while True:
 
                 # window['-O-'].update(objects[i].orientation)
                 # window['-X-'].update(objects[i].position[0])
-                
+
                 # refresh_view(values['-REDNER_TYPE-'],objects,[i])
                 function_called_when_mesh_selected(i,meshes_names)
             if event == '-GRAPH-+UP':
                 drag_loc = None
 
-    
+
 
 window.close()
