@@ -9,6 +9,10 @@ import pyrender
 
 import os
 import numpy as np
+
+from dataset import Dataset
+from distance import Distance
+
 def RGB_2_HEX(x: tuple):
     return f"#{x[0]:02x}{x[1]:02x}{x[2]:02x}"
 def get_boundries(points,i):
@@ -42,7 +46,7 @@ def correct_dimensions(obj):
         
 def refresh_view(RENDER_MODE,objects,nums=None):
     if nums is None:
-        nums = list(range(len(objects)))
+        nums = list(range(6))
     for i in nums:
         canvas: sg.Graph = window[f'-GRAPH-{i}']
         canvas.erase()
@@ -100,6 +104,11 @@ def get_path(elements):
 
 # Create Scene
 
+# init Dataset and Distance
+ds = Dataset("Princeton_remeshed_normalized", write_basic_csv = False, write_other_csv = False)
+dist = Distance("Princeton_remeshed_normalized", ["m1693.ply"])
+
+#keep these default values for now because it prefills objects[] even though it is cursed af
 main_path = get_path(['.','meshes','Princeton','aircraft'])
 meshes_names = ['m1139.ply','m1127.ply','m1119.ply','m1149.ply','m1159.ply','m1169.ply']
 
@@ -152,14 +161,20 @@ while True:
         path = values['-BROWSE-']
         print(path,os.sep)
         objects[0] = obj_reader.import_obj(path, rotation=('z', 0), translation=(0, 0, 0))
-        # set the new_objects with your custom objects
-        new_objects = objects[1:]
-        objects[1:] = new_objects
+
+        result = dist.query(path, dist.euclidean_EMD, k=5)
+
+        meshes = [i[0] for i in result]
+        meshpaths = [ds.get_mesh_file_path(m) for m in meshes]
+        print(meshes, meshpaths)
+        dists = [i[1] for i in result]
+        
+        objects[1:] = list(obj_reader.import_obj(p, rotation=('z', 0), translation=(0,0,0)) for p in meshpaths)
+
         refresh_view(values['-REDNER_TYPE-'],objects)
         # set the new distances
-        dists = [0,.14,0.21,0.33,0.56,0.67]
         for i in range(1,6):
-            window[f'-DIST-{i}'].Update(f'dist={dists[i]}')
+            window[f'-DIST-{i}'].Update(f'dist={str(round(dists[i-1], 6))}')
             
         
     else:

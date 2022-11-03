@@ -109,7 +109,7 @@ class Camera_3D:
         centroids = object.get_centroids()
         ordered_faces = [
             x
-            for _, x in sorted(zip(centroids, object.faces), reverse=True)
+            for _, x in sorted(zip(centroids, object.faces), key=lambda x: x[0], reverse=True)
         ]
 
         return ordered_faces

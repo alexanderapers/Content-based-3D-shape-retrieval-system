@@ -174,7 +174,7 @@ class Dataset:
         for folder in os.listdir(shape_dir):
             if not folder.startswith(".") and not folder.endswith(".txt"):
                 for filename in os.listdir(shape_dir + folder):
-                    if filename.endswith(".ply") or filename.endswith(".obj") or filename.endswith("off"):
+                    if filename.endswith(".ply") or filename.endswith(".obj") or filename.endswith(".off"):
                         file_path = shape_dir + folder + "/" + filename
                         yield file_path
 
@@ -184,6 +184,11 @@ class Dataset:
             if mesh.name == mesh_name:
                 return mesh
         raise Exception("This mesh was not found.")
+
+    def get_mesh_file_path(self, mesh_name):
+        for meshpath in self.get_all_meshes_file_paths():
+            if meshpath.endswith(mesh_name) or meshpath.endswith(mesh_name + ".ply") or meshpath.endswith(mesh_name + ".obj") or meshpath.endswith(mesh_name + ".off"):
+                return meshpath
 
 
     def show_mesh(self, mesh_name):
