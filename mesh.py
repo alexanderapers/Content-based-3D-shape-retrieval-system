@@ -233,7 +233,7 @@ class Mesh:
 
 
 
-#original code
+""" #original code
 
 import trimesh
 from trimesh.exchange.export import export_mesh
@@ -461,4 +461,4 @@ class Mesh:
         fill_holes(self.mesh)
         fix_normals(self.mesh, multibody=True)
         #faces = broken_faces(self.mesh)
-        #stitch(self.mesh, faces=faces)
+        #stitch(self.mesh, faces=faces) """
