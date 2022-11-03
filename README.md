@@ -3,7 +3,7 @@
 Dependencies:
 - trimesh
 - scipy
-- pyglet
+- pyglet==1.5.27
 - networkx
 - pillow
 - shapely
