@@ -16,7 +16,7 @@ class Distance:
         self.exclude_list = exclude_list
         self.norm_info = np.load("norm_info.npy")
         # edit this to tweak weights
-        self.weights = self.normalize_weights([np.repeat(1/10, 5), np.repeat(1/100, 50)])
+        self.weights = np.concatenate([np.repeat(1/10, 5), np.repeat(1/100, 50)])
         # compiling numba
         #self.manhatten(np.array([1.0]), np.array([1.0]))
         #self.euclidean(np.array([1.0]), np.array([1.0]))
@@ -30,9 +30,9 @@ class Distance:
         #     print(r, d)
 
     # helper function so weights don't need to add up to 1
-    def normalize_weights(*args):
-        totalweight = sum(args)
-        for w in args:
+    def normalize_weights(*weight):
+        totalweight = np.sum(weight)
+        for w in weight:
             w = w/totalweight
         return args
 
