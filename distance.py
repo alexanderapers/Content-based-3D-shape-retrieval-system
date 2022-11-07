@@ -16,7 +16,7 @@ class Distance:
         self.exclude_list = exclude_list
         self.norm_info = np.load("norm_info.npy")
         # edit this to tweak weights
-        self.weights = np.concatenate([np.repeat(1/10, 5), np.repeat(1/100, 50)])
+        self.weights = self.normalize_weights([np.repeat(1/10, 5), np.repeat(1/100, 50)])
         # compiling numba
         #self.manhatten(np.array([1.0]), np.array([1.0]))
         #self.euclidean(np.array([1.0]), np.array([1.0]))
@@ -29,6 +29,12 @@ class Distance:
         # for r, d in result:
         #     print(r, d)
 
+    # helper function so weights don't need to add up to 1
+    def normalize_weights(*args):
+        totalweight = sum(args)
+        for w in args:
+            w = w/totalweight
+        return args
 
     def query(self, mesh_file_path, metric, k=10):
         start_time = time.perf_counter()
@@ -49,7 +55,6 @@ class Distance:
                 mesh_features = np.array(row[2:]).astype(float)
                 features_dict[mesh_name] = mesh_features
             return features_dict
-
 
     def distance(self, mesh_name_1, mesh_name_2, metric):
         a = self.weights * self.features[mesh_name_1]
