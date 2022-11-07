@@ -15,6 +15,7 @@ class Distance:
         self.features = self.csv_to_dict()
         self.exclude_list = exclude_list
         self.norm_info = np.load("norm_info.npy")
+
         # edit this to tweak weights
         elem_weights = np.repeat(10, 5)
         a3_weights = np.repeat(1, 10)
@@ -24,6 +25,7 @@ class Distance:
         d4_weights = np.repeat(1, 10)
 
         self.weights = self.normalize_weights(elem_weights, a3_weights, d1_weights, d2_weights, d3_weights, d4_weights)
+    
         # compiling numba
         #self.manhatten(np.array([1.0]), np.array([1.0]))
         #self.euclidean(np.array([1.0]), np.array([1.0]))
@@ -36,7 +38,7 @@ class Distance:
         # for r, d in result:
         #     print(r, d)
 
-    # helper function so weights don't need to add up to 1
+    # Helper function so that weights don't need to add up to 1 at the input level
     def normalize_weights(*weight):
         all = np.concatenate(weight[1:])
         totalweight = np.sum(all)
