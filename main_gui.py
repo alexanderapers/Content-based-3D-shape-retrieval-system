@@ -48,7 +48,7 @@ def correct_dimensions(obj):
 def refresh_view(RENDER_MODE,objects,nums=None):
     if nums is None:
         nums = list(range(6))
-    for i in nums[1:]:
+    for i in nums:
         
         split_path = re.split(r'\\|/', objects[i])
         split_path[-3] = "thumbnails"
@@ -62,51 +62,6 @@ def refresh_view(RENDER_MODE,objects,nums=None):
 
         canvas: sg.Image = window[f'-THMB-{i}']
         canvas = sg.Image(path, size=(240, 240))
-        # my_object = objects[i]
-        # # makes the orientation of the mesh good for displaying
-        # my_object = correct_dimensions(my_object)
-        # points = my_camera.project_object(my_object)
-        # mn_y,mx_y = get_boundries(points,0)
-        # mn_z,mx_z = get_boundries(points,1)
-
-        # points = [(standerdize(p[0],mn_y,mx_y)-1/2,standerdize(p[1],mn_z,mx_z)-1/2)for p in points]
-        # if RENDER_MODE == 'LINES':
-        #     if my_object.edges is None:
-        #         canvas.draw_text("No lines data in file!", (0, 0), 'white')
-        #         return
-
-        #     for p1, p2 in my_camera.get_edges(my_object):
-        #         canvas.draw_line(p1, p2, 'white', 3)
-
-        # if RENDER_MODE == 'POINTS':
-        #     if my_object.verts is None:
-        #         canvas.draw_text("No points in file!", (0, 0), 'white')
-        #         return
-
-        #     for p in points:
-        #         canvas.draw_circle(p, 0.005, 'white', 'white')
-
-        # if RENDER_MODE == 'FACES':
-        #     if my_object.faces is None:
-        #         canvas.draw_text("No faces data in file!", (0, 0), 'white')
-        #         return
-
-        #     for f in my_camera.get_faces(my_object):
-        #         verts = [points[p] for p in f]
-        #         canvas.draw_polygon(verts, 'grey', 'orange', 0.02)
-
-        # if RENDER_MODE == 'SHADED':
-        #     if my_object.faces is None:
-        #         canvas.draw_text("No faces data in file!", (0, 0), 'white')
-        #         return
-
-        #     faces = my_camera.get_faces(my_object)
-        #     for n, f in enumerate(faces):
-        #         c = int(n / len(faces) * 150) + 50
-        #         face_colour = RGB_2_HEX((c, c, c))
-        #         verts = [points[p] for p in f]
-        #         canvas.draw_polygon(verts, face_colour, face_colour, 0.02)
-
 
 def get_path(elements):
     path = elements[0]
@@ -150,6 +105,7 @@ layout.append([[sg.Text("Choose a file: "), sg.Input(key='-BROWSE-'), sg.FileBro
 
 def function_called_when_mesh_selected(i,names):
     print("mesh selected name is",names[i])
+    ds.show_mesh(names[i])
 print()
 window = sg.Window('3D Viewport', layout)
 
@@ -178,6 +134,7 @@ while True:
 
         meshes = [i[0] for i in result]
         meshpaths = [ds.get_mesh_file_path(m) for m in meshes]
+        meshes_names[1:] = meshes
         print(meshes, meshpaths)
         dists = [i[1] for i in result]
 
@@ -191,24 +148,11 @@ while True:
 
     else:
         for i in range(nums):
-            if event == f'-THMB-{i}':
-                new_drag_location = values[f'-THMB-{i}']
-
-                if not drag_loc:
-                    drag_loc = new_drag_location
-
-                objects[i].orientation += (drag_loc[0] - new_drag_location[0]) * 360
-                objects[i].position[0] += (drag_loc[1] - new_drag_location[1]) * -10
-
-                drag_loc = new_drag_location
-
-
-                # window['-O-'].update(objects[i].orientation)
-                # window['-X-'].update(objects[i].position[0])
-
-                # refresh_view(values['-REDNER_TYPE-'],objects,[i])
+            if event == f'-THMB-0':
+                print("Can't show query mesh")
+            elif event == f'-THMB-{i}':
                 function_called_when_mesh_selected(i,meshes_names)
-            if event == '-GRAPH-+UP':
+            elif event == '-GRAPH-+UP':
                 drag_loc = None
 
 

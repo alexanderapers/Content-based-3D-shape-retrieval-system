@@ -75,6 +75,7 @@ class Distance:
         mesh = Mesh(query_mesh_file_path)
         mesh.resample_mesh()
         mesh.normalize_mesh()
+        mesh.save_thumbnail()
         return mesh
 
 
