@@ -1,4 +1,4 @@
-import time
+#import time
 import csv
 import numpy as np
 #from numba import njit
@@ -25,7 +25,7 @@ class Distance:
         d4_weights = np.repeat(1, 10)
 
         self.weights = self.normalize_weights(elem_weights, a3_weights, d1_weights, d2_weights, d3_weights, d4_weights)
-    
+
         # compiling numba
         #self.manhatten(np.array([1.0]), np.array([1.0]))
         #self.euclidean(np.array([1.0]), np.array([1.0]))
@@ -46,11 +46,11 @@ class Distance:
         return all
 
     def query(self, mesh_file_path, metric, k=10):
-        start_time = time.perf_counter()
+        #start_time = time.perf_counter()
         query_mesh = self.meshify(mesh_file_path)
         query_features = self.extract_features_mesh(query_mesh)
         result = self.find_k_most_similar(query_features, metric, k)
-        print("--- %s seconds ---" % (time.perf_counter() - start_time))
+        #print("--- %s seconds ---" % (time.perf_counter() - start_time))
         return result
 
 

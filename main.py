@@ -1,16 +1,16 @@
 #import sys
-from dataset import Dataset
-from mesh import Mesh
+#from dataset import Dataset
+#from mesh import Mesh
 #import face_area_plots
 #from reorder import reorder_dataset
-from distance import Distance
-import os
+#from distance import Distance
+#import os
 
 
 
 if __name__ == "__main__":
-    dataset = Dataset("Princeton_remeshed_normalized", write_basic_csv = False, write_other_csv = False)
-    dataset.save_thumbnails()
+    #dataset = Dataset("Princeton_remeshed_normalized", write_basic_csv = False, write_other_csv = False)
+    #dataset.save_thumbnails()
 
     # count = 0
     # path = os.path.join(os.getcwd(), "thumbnails")
@@ -32,7 +32,7 @@ if __name__ == "__main__":
     #dataset_remeshed_normalized.write_shape_features()
     #dataset_remeshed_normalized.write_all_features_normalized()
 
-    Distance("Princeton_remeshed_normalized", ["m1693.ply"])
+    #Distance("Princeton_remeshed_normalized", ["m1693.ply"])
 
     #reorder_dataset(dataset_original)
     #reorder_dataset(dataset_remeshed)
