@@ -1,5 +1,5 @@
 import trimesh
-#from trimesh.exchange.export import export_mesh
+from trimesh.exchange.export import export_mesh
 import numpy as np
 from trimesh.repair import fill_holes
 from trimesh.repair import fix_inversion
@@ -262,7 +262,7 @@ class Mesh:
         self.mesh.apply_transform(rot) # rotating the mesh is way easier since it's at origin
         sc = scene.Scene(geometry=self.mesh)
         sc.camera.resolution = [240,240]
-        sc.camera_transform = sc.camera.look_at(self.mesh.vertices) # zoom out i think? not sure
+        sc.camera_transform = sc.camera.look_at(self.mesh.vertices, distance = 1.41) # zoom out i think? not sure
 
         png = sc.save_image(resolution=[240, 240], visible=True)
         with open(filepath + filename, 'wb') as f:
