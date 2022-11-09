@@ -270,3 +270,11 @@ class Dataset:
             self.write_bounding_box_csv()
             self.write_alignment_csv()
             self.write_flipping_csv()
+    
+    def save_thumbnails(self):
+        progress = 0
+        for mesh in self.make_all_meshes():
+            if mesh.save_thumbnail():
+                progress += 1
+                print(progress, mesh.name)
+                

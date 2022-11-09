@@ -1,5 +1,5 @@
 import trimesh
-#from trimesh.exchange.export import export_mesh
+from trimesh.exchange.export import export_mesh
 import numpy as np
 from trimesh.repair import fill_holes
 from trimesh.repair import fix_inversion
@@ -7,7 +7,9 @@ from trimesh.repair import fix_normals
 from trimesh.repair import fix_winding
 from trimesh.repair import broken_faces
 from trimesh.repair import stitch
+from trimesh import scene
 import os
+import re
 #import open3d as o3d
 
 class Mesh:
@@ -242,3 +244,29 @@ class Mesh:
         self.normalize_alignment()
         self.normalize_scale()
         self.normalize_flipping()
+
+    def save_thumbnail(self):
+        # rotation angle chosen based on what looks okayish
+        cat = re.split(r'\\|/', self.category)[-1] # god shit fuck i hate developing for both windows and mac
+        filepath = "thumbnails" + os.sep + cat + os.sep
+        filename = self.name.split('.')[-2] + ".png"
+        if not os.path.exists(filepath):
+            os.makedirs(filepath)
+        if os.path.exists(filepath + filename):
+            return False # skip meshes that alrdy exist
+
+        angle = 0.25 * np.pi
+        rot = trimesh.transformations.rotation_matrix(angle, (1, 0, 0)) # x
+        rot = np.dot(rot, trimesh.transformations.rotation_matrix(-0.5 * angle, (0, 1, 0))) # y
+        rot = np.dot(rot, trimesh.transformations.rotation_matrix(0.5 * angle, (0, 0, 1))) # z
+        self.mesh.apply_transform(rot) # rotating the mesh is way easier since it's at origin
+        sc = scene.Scene(geometry=self.mesh)
+        sc.camera.resolution = [240,240]
+        sc.camera_transform = sc.camera.look_at(self.mesh.vertices, distance = 1.41) # zoom out i think? not sure
+
+        png = sc.save_image(resolution=[240, 240], visible=True)
+        with open(filepath + filename, 'wb') as f:
+            f.write(png)
+            f.close()
+        
+        return True
