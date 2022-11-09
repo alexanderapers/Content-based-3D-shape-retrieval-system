@@ -88,10 +88,13 @@ class Dataset:
         if not os.path.exists(join(os.getcwd(), "features")):
             os.mkdir("features")
         with open(os.getcwd() + "/features/" + self.folder_name_dataset + "_shape_features.csv", "w") as conn:
+            for mesh in self:
+                shape_features = Shape_Features_Mesh(mesh)
+                break
             writer = csv.writer(conn)
-            ft_names = [ft + "_" + str(i) for ft in ["A3", "D1", "D2", "D3", "D4"] for i in range(1, 11)]
+            ft_names = [ft + "_" + str(i) for ft in ["A3", "D1", "D2", "D3", "D4"] for i in range(1, shape_features.n_bins + 1)]
             writer.writerow(["mesh name"] + ft_names)
-            for mesh in tqdm(self.make_all_meshes()):
+            for mesh in tqdm(self):
                 if mesh.name not in self.exclude_list:
                     writer.writerow(Shape_Features_Mesh(mesh).get_all_shape_features())
 
@@ -270,11 +273,10 @@ class Dataset:
             self.write_bounding_box_csv()
             self.write_alignment_csv()
             self.write_flipping_csv()
-    
+
     def save_thumbnails(self):
         progress = 0
         for mesh in self.make_all_meshes():
             if mesh.save_thumbnail():
                 progress += 1
                 print(progress, mesh.name)
-                
