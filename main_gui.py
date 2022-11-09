@@ -8,6 +8,7 @@ import trimesh
 import pyrender
 
 import os
+import re
 import numpy as np
 
 from dataset import Dataset
@@ -47,53 +48,64 @@ def correct_dimensions(obj):
 def refresh_view(RENDER_MODE,objects,nums=None):
     if nums is None:
         nums = list(range(6))
-    for i in nums:
-        canvas: sg.Graph = window[f'-GRAPH-{i}']
-        canvas.erase()
-        my_object = objects[i]
-        # makes the orientation of the mesh good for displaying
-        my_object = correct_dimensions(my_object)
-        points = my_camera.project_object(my_object)
-        mn_y,mx_y = get_boundries(points,0)
-        mn_z,mx_z = get_boundries(points,1)
+    for i in nums[1:]:
+        
+        split_path = re.split(r'\\|/', objects[i])
+        split_path[-3] = "thumbnails"
+        file = str.split(split_path[-1], '.')
+        file[1] = "png"
+        split_path[-1] = '.'.join(file)
+        path = os.sep.join(split_path)
+        print(path)
 
-        points = [(standerdize(p[0],mn_y,mx_y)-1/2,standerdize(p[1],mn_z,mx_z)-1/2)for p in points]
-        if RENDER_MODE == 'LINES':
-            if my_object.edges is None:
-                canvas.draw_text("No lines data in file!", (0, 0), 'white')
-                return
+        window[f'-THMB-{i}'].Update(path)
 
-            for p1, p2 in my_camera.get_edges(my_object):
-                canvas.draw_line(p1, p2, 'white', 3)
+        canvas: sg.Image = window[f'-THMB-{i}']
+        canvas = sg.Image(path, size=(240, 240))
+        # my_object = objects[i]
+        # # makes the orientation of the mesh good for displaying
+        # my_object = correct_dimensions(my_object)
+        # points = my_camera.project_object(my_object)
+        # mn_y,mx_y = get_boundries(points,0)
+        # mn_z,mx_z = get_boundries(points,1)
 
-        if RENDER_MODE == 'POINTS':
-            if my_object.verts is None:
-                canvas.draw_text("No points in file!", (0, 0), 'white')
-                return
+        # points = [(standerdize(p[0],mn_y,mx_y)-1/2,standerdize(p[1],mn_z,mx_z)-1/2)for p in points]
+        # if RENDER_MODE == 'LINES':
+        #     if my_object.edges is None:
+        #         canvas.draw_text("No lines data in file!", (0, 0), 'white')
+        #         return
 
-            for p in points:
-                canvas.draw_circle(p, 0.005, 'white', 'white')
+        #     for p1, p2 in my_camera.get_edges(my_object):
+        #         canvas.draw_line(p1, p2, 'white', 3)
 
-        if RENDER_MODE == 'FACES':
-            if my_object.faces is None:
-                canvas.draw_text("No faces data in file!", (0, 0), 'white')
-                return
+        # if RENDER_MODE == 'POINTS':
+        #     if my_object.verts is None:
+        #         canvas.draw_text("No points in file!", (0, 0), 'white')
+        #         return
 
-            for f in my_camera.get_faces(my_object):
-                verts = [points[p] for p in f]
-                canvas.draw_polygon(verts, 'grey', 'orange', 0.02)
+        #     for p in points:
+        #         canvas.draw_circle(p, 0.005, 'white', 'white')
 
-        if RENDER_MODE == 'SHADED':
-            if my_object.faces is None:
-                canvas.draw_text("No faces data in file!", (0, 0), 'white')
-                return
+        # if RENDER_MODE == 'FACES':
+        #     if my_object.faces is None:
+        #         canvas.draw_text("No faces data in file!", (0, 0), 'white')
+        #         return
 
-            faces = my_camera.get_faces(my_object)
-            for n, f in enumerate(faces):
-                c = int(n / len(faces) * 150) + 50
-                face_colour = RGB_2_HEX((c, c, c))
-                verts = [points[p] for p in f]
-                canvas.draw_polygon(verts, face_colour, face_colour, 0.02)
+        #     for f in my_camera.get_faces(my_object):
+        #         verts = [points[p] for p in f]
+        #         canvas.draw_polygon(verts, 'grey', 'orange', 0.02)
+
+        # if RENDER_MODE == 'SHADED':
+        #     if my_object.faces is None:
+        #         canvas.draw_text("No faces data in file!", (0, 0), 'white')
+        #         return
+
+        #     faces = my_camera.get_faces(my_object)
+        #     for n, f in enumerate(faces):
+        #         c = int(n / len(faces) * 150) + 50
+        #         face_colour = RGB_2_HEX((c, c, c))
+        #         verts = [points[p] for p in f]
+        #         canvas.draw_polygon(verts, face_colour, face_colour, 0.02)
 
 
 def get_path(elements):
@@ -115,20 +127,20 @@ meshes_names = ['m1139.ply','m1127.ply','m1119.ply','m1149.ply','m1159.ply','m11
 nums = len(meshes_names)
 
 paths = [os.path.join(main_path,name) for name in meshes_names]
-objects = [obj_reader.import_obj(path, rotation=('z', 0), translation=(0, 0, 0)) for path in paths]
+objects = [paths]
 my_camera = planar_projection.Camera_3D(
     focal_distance=-2,
     projection_plane_distance=1
 )
 sg.theme('DarkAmber')
-GRAPH_SIZE = (100,100) if sg.running_trinket() else (150,150)
+THUMB_SIZE = (100,100) if sg.running_trinket() else (150,150)
 
 def generate_element(st_idx,dist,text,i):
 
     text_ele = [sg.Text(str(text),font=('Helvetica', 15))]
-    graphs = [sg.Graph(GRAPH_SIZE, (-1, -1), (1, 1), 'black', float_values=True, enable_events=True, key=f'-GRAPH-{i}', drag_submits=True) ]
+    thumbs = [sg.Image(size=THUMB_SIZE, enable_events=True, key=f'-THMB-{i}') ]
     dist_text = [sg.Text("dis="+str(dist),font=('Helvetica', 15),key=f'-DIST-{i}') if dist is not None else sg.Text("",font=('Helvetica', 15),key=f'-DIST-{i}') ]
-    col = sg.Column([text_ele,graphs,dist_text], element_justification='center', expand_x=True)
+    col = sg.Column([text_ele,thumbs,dist_text], element_justification='center', expand_x=True)
     return col
 
 text = ['Query shape','1','2','3','4','5']
@@ -160,7 +172,7 @@ while True:
         # write code here
         path = values['-BROWSE-']
         print(path,os.sep)
-        objects[0] = obj_reader.import_obj(path, rotation=('z', 0), translation=(0, 0, 0))
+        objects[0] = path #obj_reader.import_obj(path, rotation=('z', 0), translation=(0, 0, 0))
 
         result = dist.query(path, dist.euclidean_EMD, k=5)
 
@@ -169,7 +181,7 @@ while True:
         print(meshes, meshpaths)
         dists = [i[1] for i in result]
 
-        objects[1:] = list(obj_reader.import_obj(p, rotation=('z', 0), translation=(0,0,0)) for p in meshpaths)
+        objects[1:] = list(meshpaths)
 
         refresh_view(values['-REDNER_TYPE-'],objects)
         # set the new distances
@@ -179,8 +191,8 @@ while True:
 
     else:
         for i in range(nums):
-            if event == f'-GRAPH-{i}':
-                new_drag_location = values[f'-GRAPH-{i}']
+            if event == f'-THMB-{i}':
+                new_drag_location = values[f'-THMB-{i}']
 
                 if not drag_loc:
                     drag_loc = new_drag_location
