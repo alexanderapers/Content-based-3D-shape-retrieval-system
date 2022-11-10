@@ -1,4 +1,4 @@
-#import time
+import time
 import csv
 import numpy as np
 #from numba import njit
@@ -15,16 +15,35 @@ class Distance:
         self.features = self.csv_to_dict()
         self.exclude_list = exclude_list
         self.norm_info = np.load("norm_info.npy")
+        self.n_bins = int((len(self.features["m1.ply"]) - 5) / 5)
 
         # edit this to tweak weights
-        elem_weights = np.repeat(10, 5)
-        a3_weights = np.repeat(1, 10)
-        d1_weights = np.repeat(1, 10)
-        d2_weights = np.repeat(1, 10)
-        d3_weights = np.repeat(1, 10)
-        d4_weights = np.repeat(1, 10)
+        #self.area, self.compactness, self.AABB_volume, self.diameter, self.eccentricity
+        elem_weights = np.array([10, 0, 0, 10, 10])
+        a3_weights = np.repeat(5, self.n_bins)
+        d1_weights = np.repeat(1, self.n_bins)
+        d2_weights = np.repeat(3, self.n_bins)
+        d3_weights = np.repeat(3, self.n_bins)
+        d4_weights = np.repeat(3, self.n_bins)
 
         self.weights = self.normalize_weights(elem_weights, a3_weights, d1_weights, d2_weights, d3_weights, d4_weights)
+
+        #print(self.features["m518.ply"])
+        #print(self.features["m514.ply"])
+        #print("euclidean:", self.distance("m518.ply", "m514.ply", self.euclidean))
+        #print("EMD:", self.distance("m518.ply", "m514.ply", self.euclidean_EMD))
+        #print("KL:", self.distance("m518.ply", "m514.ply", self.euclidean_KL))
+
+        # print("weight: area", self.weights[0])
+        # print("weight: compactness", self.weights[1])
+        # print("weight: AABB_volume", self.weights[2])
+        # print("weight: diameter", self.weights[3])
+        # print("weight: eccentricity", self.weights[4])
+        # print("weight: A3", sum(self.weights[5:35]))
+        # print("weight: D1", sum(self.weights[35:65]))
+        # print("weight: D2", sum(self.weights[65:95]))
+        # print("weight: D3", sum(self.weights[95:125]))
+        # print("weight: D4", sum(self.weights[125:155]))
 
         # compiling numba
         #self.manhatten(np.array([1.0]), np.array([1.0]))
@@ -32,8 +51,8 @@ class Distance:
         #self.cosine(np.array([1.0]), np.array([1.0]))
 
         # print this to see result of query
-        # result = self.query("LabeledDB_new/Octopus/121.off", self.mahalanobis, k=10)
-        # print(result)
+        #result = self.query("LabeledDB_new/Octopus/121.off", self.euclidean_EMD, k=10)
+        #print(result)
 
         # for r, d in result:
         #     print(r, d)
@@ -45,12 +64,13 @@ class Distance:
         all = all / totalweight
         return all
 
+
     def query(self, mesh_file_path, metric, k=10):
         #start_time = time.perf_counter()
         query_mesh = self.meshify(mesh_file_path)
         query_features = self.extract_features_mesh(query_mesh)
         result = self.find_k_most_similar(query_features, metric, k)
-        #print("--- %s seconds ---" % (time.perf_counter() - start_time))
+        #print("--- % seconds ---" % (time.perf_counter() - start_time))
         return result
 
 
@@ -64,6 +84,7 @@ class Distance:
                 mesh_features = np.array(row[2:]).astype(float)
                 features_dict[mesh_name] = mesh_features
             return features_dict
+
 
     def distance(self, mesh_name_1, mesh_name_2, metric):
         a = self.weights * self.features[mesh_name_1]
@@ -113,30 +134,33 @@ class Distance:
         return 1 - (np.dot(mesh_features_1, mesh_features_2) / (norm_1 * norm_2))
 
 
-    @staticmethod
+    #@staticmethod
     #@njit()
-    def euclidean_EMD(mesh_features_1, mesh_features_2):
+    def euclidean_EMD(self, mesh_features_1, mesh_features_2):
         distances = np.zeros(6)
         elem_distance = Distance.euclidean(mesh_features_1[:5], mesh_features_2[:5])
         distances[0] = elem_distance
+        # print("elem distance", elem_distance)
         j = 1
-        for i in range(5, 55, 10):
-            hist_distance = wasserstein_distance(np.arange(10), np.arange(10),
-                mesh_features_1[i:i+10], mesh_features_2[i:i+10])
-            distances[j] = hist_distance
+        for i in range(5, 5*self.n_bins + 5, self.n_bins):
+            hist_distance = wasserstein_distance(np.arange(self.n_bins), np.arange(self.n_bins),
+                mesh_features_1[i:i+self.n_bins], mesh_features_2[i:i+self.n_bins])
+            distances[j] = hist_distance / self.n_bins
+            #print("hist distance:", distances[j], j)
             j += 1
         return np.mean(distances)
 
 
-    @staticmethod
+    #@staticmethod
     #njit()
-    def euclidean_KL(mesh_features_1, mesh_features_2):
+    # KL divergence is kinda broken since it cannot deal with 0 values
+    def euclidean_KL(self, mesh_features_1, mesh_features_2):
         distances = np.zeros(6)
         elem_distance = Distance.euclidean(mesh_features_1[:5], mesh_features_2[:5])
         distances[0] = elem_distance
         j = 1
-        for i in range(5, 55, 10):
-            hist_distance = Distance.symm_KL(mesh_features_1[i:i+10], mesh_features_2[i:i+10])
+        for i in range(5, 5*self.n_bins + 5, self.n_bins):
+            hist_distance = Distance.symm_KL(mesh_features_1[i:i+self.n_bins], mesh_features_2[i:i+self.n_bins])
             distances[j] = hist_distance
             j += 1
         return np.mean(distances)

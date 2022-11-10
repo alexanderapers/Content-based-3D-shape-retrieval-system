@@ -4,7 +4,7 @@ from trimesh.sample import sample_surface_even
 from trimesh.points import PointCloud
 import logging
 #import time
-from numba import njit
+#from numba import njit
 
 
 class Shape_Features_Mesh:
@@ -51,7 +51,7 @@ class Shape_Features_Mesh:
 
 
     @staticmethod
-    @njit()
+    #@njit()
     def A3_sub1(points1, points2, points3):
         # theoretical maximum: np.pi
         edge1 = points1 - points2
@@ -62,7 +62,7 @@ class Shape_Features_Mesh:
 
 
     @staticmethod
-    @njit()
+    #@njit()
     def A3_sub2(dot, norm_edge1, norm_edge2):
         cosine_angle = dot / (norm_edge1 * norm_edge2)
         angles = np.arccos(cosine_angle)
@@ -82,19 +82,19 @@ class Shape_Features_Mesh:
 
 
     @staticmethod
-    @njit()
+    #@njit()
     def get_D1(points1):
         return np.sqrt(np.sum(np.square(points1), axis=1))
 
 
     @staticmethod
-    @njit()
+    #@njit()
     def get_D2(points1, points2):
         return np.sqrt(np.sum(np.square(points1 - points2), axis=1))
 
 
     @staticmethod
-    @njit()
+    #@njit()
     def D3_sub(points1, points2, points3):
         edge1 = points1 - points2
         edge2 = points3 - points2
@@ -110,7 +110,7 @@ class Shape_Features_Mesh:
 
 
     @staticmethod
-    @njit()
+    #@njit()
     def get_D4(points1, points2, points3, points4):
         # i guess it's always less than 1/2
         ad = points1 - points4
@@ -160,7 +160,7 @@ class Shape_Features_Mesh:
 
 
     @staticmethod
-    @njit()
+    #@njit()
     def permute(inp):
         return np.random.permutation(inp)
 
