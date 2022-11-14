@@ -30,5 +30,10 @@ To visualise a querying UI run like this:
 * run "pip install -r requirements.txt" -->
 * run "python main_gui.py"
 
+It will automatically use our custom distance function. To use the ANN querying with L2 distance function, add the "--ann" command line argument.
+
+* "python main_gui.py --ann"
+* "python main_gui.py --custom"
+
 <!--P.S.
 The step of creating the "meshes" folder is just to make the hard coded paths in the code work fine for testing purposes. You can change these paths instead if you don't want to change your meshes location in your local computer-->
