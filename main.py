@@ -5,7 +5,8 @@
 #from reorder import reorder_dataset
 #from distance import Distance
 #import os
-from tsne import DimRed
+# from tsne import DimRed
+#from ANN import Annoy
 
 
 
@@ -31,8 +32,10 @@ if __name__ == "__main__":
     # takes a while to run and makes big files
     #face_area_plots.plot_face_area(dataset_original, dataset_remeshed)
 
-    dimred = DimRed("Princeton_remeshed_normalized", ["m1693.ply"], n_bins=30, pca=True)
-    dimred.plot()
+    # dimred = DimRed("Princeton_remeshed_normalized", ["m1693.ply"], n_bins=30, pca=True)
+    # dimred.plot()
+
+    #ann = Annoy("Princeton_remeshed_normalized", ["m1693.ply"], n_bins=30)
 
     # if len(sys.argv) == 2:
     #     dataset_remeshed_normalized.show_mesh(sys.argv[1])

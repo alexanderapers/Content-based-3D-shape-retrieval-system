@@ -10,9 +10,11 @@ import PySimpleGUI as sg
 import os
 import re
 import numpy as np
+import sys
 
 from dataset import Dataset
 from distance import Distance
+from ANN import Annoy
 
 # def RGB_2_HEX(x: tuple):
 #     return f"#{x[0]:02x}{x[1]:02x}{x[2]:02x}"
@@ -74,6 +76,7 @@ def get_path(elements):
 # init Dataset and Distance
 ds = Dataset("Princeton_remeshed_normalized", write_basic_csv = False, write_other_csv = False)
 dist = Distance("Princeton_remeshed_normalized", ["m1693.ply"])
+ann = Annoy("Princeton_remeshed_normalized", ["m1693.ply"], n_bins=30)
 
 #keep these default values for now because it prefills objects[] even though it is cursed af
 main_path = get_path(['.','Princeton','aircraft'])
@@ -130,7 +133,18 @@ while True:
         #print(path,os.sep)
         objects[0] = path #obj_reader.import_obj(path, rotation=('z', 0), translation=(0, 0, 0))
 
-        result = dist.query(path, dist.euclidean_EMD, k=5)
+        if len(sys.argv) < 2:
+            result = dist.query(path, dist.euclidean_EMD, k=5)
+            print("Using custom distance function...")
+        else:
+            if sys.argv[1] == "--ann":
+                result = ann.query(path, k=5)
+                print("Using custom ANN euclidean...")
+            elif sys.argv[1] == "--custom":
+                result = dist.query(path, dist.euclidean_EMD, k=5)
+                print("Using custom distance function...")
+            else:
+                print("Not a valid distance function")
 
         meshes = [i[0] for i in result]
         meshpaths = [ds.get_mesh_file_path(m) for m in meshes]

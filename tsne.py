@@ -14,7 +14,7 @@ class DimRed:
         self.csv_file = "features/" + dataset_name + "_all_features_normalized.csv"
         self.name_cat = pd.read_csv(self.csv_file, usecols=[0, 1])
         self.exclude_list = exclude_list
-        self.n_bins = 30
+        self.n_bins = n_bins
         self.n_features = 5 + 5 * self.n_bins
         self.features = pd.read_csv(self.csv_file, usecols=np.arange(0,self.n_features+2))
         if pca:
