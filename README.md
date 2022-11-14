@@ -10,6 +10,8 @@ Dependencies:
 - open3d (requires python 3.9 or lower)
 - numba
 - PySimpleGUI
+- Annoy
+- seaborn
 
 To visualise a mesh run like this:  
 **python main.py mesh_name**  
