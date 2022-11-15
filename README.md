@@ -11,7 +11,8 @@ Dependencies:
 - numba
 - PySimpleGUI
 - Annoy
-- seaborn
+- seaborns
+- pickle
 
 To visualise a mesh run like this:  
 **python main.py mesh_name**  
