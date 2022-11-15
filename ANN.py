@@ -42,3 +42,14 @@ class Annoy:
         result = [(self.index_to_mesh_name[x], y) for x, y in list(zip(result[0], result[1]))]
         #print("--- % seconds ---" % (time.perf_counter() - start_time))
         return result
+
+
+    def query_inside_db(self, query_mesh_file_path, k=10):
+        #start_time = time.perf_counter()
+        t = AnnoyIndex(self.n_features, 'euclidean')
+        t.load("query_trees.ann")
+        mesh_name = query_mesh_file_path.split("/")[-1]
+        result = t.get_nns_by_item(self.mesh_name_to_index[mesh_name], k, include_distances=True)
+        result = [(self.index_to_mesh_name[x], y) for x, y in list(zip(result[0], result[1]))]
+        #print("--- % seconds ---" % (time.perf_counter() - start_time))
+        return result
