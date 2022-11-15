@@ -72,9 +72,8 @@ import numpy as np
 # print("\n----------------\nDone! Press ENTER to exit.")
 # input()
 
-
-def reorder_dataset(dataset):
-    with open("princeton_labels.txt") as f:
+def make_category_shapes_dict():
+    with open("princeton_labels_numbered.txt") as f:
         lines = f.readlines()
         reorder = dict()
         for line in lines:
@@ -84,6 +83,11 @@ def reorder_dataset(dataset):
             start = int(args[1])
             end = int(args[2])
             reorder[label] = [start, end]
+        return reorder
+
+
+def reorder_dataset(dataset):
+    reorder = self.make_category_shapes_dict()
 
     currentdir = os.getcwd()
     dataset_dir = currentdir + "/" + dataset.folder_name_dataset
