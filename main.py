@@ -7,7 +7,8 @@ from dataset import Dataset
 #import os
 # from tsne import DimRed
 #from ANN import Annoy
-from evaluation import Evaluation
+#from evaluation import Evaluation
+from timing import Timing
 
 
 if __name__ == "__main__":
@@ -34,10 +35,12 @@ if __name__ == "__main__":
 
     # dimred = DimRed("Princeton_remeshed_normalized", ["m1693.ply"], n_bins=30, pca=True)
     # dimred.plot()
-    eval = Evaluation(dataset_remeshed_normalized, exclude_list=["m1693.ply"])
+    #eval = Evaluation(dataset_remeshed_normalized, exclude_list=["m1693.ply"])
     #eval.querying(method="ann")
     #eval.querying(method="custom")
     #ann = Annoy("Princeton_remeshed_normalized", ["m1693.ply"], n_bins=30)
+
+    timing = Timing(dataset_remeshed_normalized, ["m1693.ply"])
 
     # if len(sys.argv) == 2:
     #     dataset_remeshed_normalized.show_mesh(sys.argv[1])
