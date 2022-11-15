@@ -74,6 +74,11 @@ class Distance:
         return result
 
 
+    def query_inside_db(self, mesh_file_path, metric, k=10):
+        result = self.find_k_most_similar(self.features[mesh_file_path.split("/")[-1]], metric, k)
+        return result
+        
+
     def csv_to_dict(self):
         with open(self.csv, 'r') as read_obj:
             features_dict = dict()
