@@ -1,5 +1,5 @@
-#import sys
-#from dataset import Dataset
+import sys
+from dataset import Dataset
 #from mesh import Mesh
 #import face_area_plots
 #from reorder import reorder_dataset
@@ -7,7 +7,7 @@
 #import os
 # from tsne import DimRed
 #from ANN import Annoy
-
+from evaluation import Evaluation
 
 
 if __name__ == "__main__":
@@ -16,7 +16,7 @@ if __name__ == "__main__":
 
     #dataset_remeshed = Dataset("Princeton_remeshed", write_basic_csv = False, write_other_csv = False)
     #dataset_remeshed.resample()
-    #dataset_remeshed_normalized = Dataset("Princeton_remeshed_normalized", write_basic_csv = False, write_other_csv = False)
+    dataset_remeshed_normalized = Dataset("Princeton_remeshed_normalized", write_basic_csv = False, write_other_csv = False)
     #dataset_remeshed_normalized.resample()
     #dataset_remeshed_normalized.normalize()
     #dataset_remeshed_normalized.write_elementary_features()
@@ -34,7 +34,9 @@ if __name__ == "__main__":
 
     # dimred = DimRed("Princeton_remeshed_normalized", ["m1693.ply"], n_bins=30, pca=True)
     # dimred.plot()
-
+    eval = Evaluation(dataset_remeshed_normalized, exclude_list=["m1693.ply"])
+    #eval.querying(method="ann")
+    #eval.querying(method="custom")
     #ann = Annoy("Princeton_remeshed_normalized", ["m1693.ply"], n_bins=30)
 
     # if len(sys.argv) == 2:
