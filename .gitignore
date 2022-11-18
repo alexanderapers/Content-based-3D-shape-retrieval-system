@@ -42,7 +42,6 @@ Princeton_remeshed/*
 Princeton_remeshed_normalized/*
 *.icloud
 
-requirements.txt
 thumbnails
 
 query_trees.ann

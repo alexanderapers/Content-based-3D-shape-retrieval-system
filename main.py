@@ -8,7 +8,7 @@ from dataset import Dataset
 # from tsne import DimRed
 #from ANN import Annoy
 #from evaluation import Evaluation
-from timing import Timing
+# from timing import Timing
 
 
 if __name__ == "__main__":
@@ -40,9 +40,9 @@ if __name__ == "__main__":
     #eval.querying(method="custom")
     #ann = Annoy("Princeton_remeshed_normalized", ["m1693.ply"], n_bins=30)
 
-    timing = Timing(dataset_remeshed_normalized, ["m1693.ply"])
+    # timing = Timing(dataset_remeshed_normalized, ["m1693.ply"])
 
-    # if len(sys.argv) == 2:
-    #     dataset_remeshed_normalized.show_mesh(sys.argv[1])
-    # else:
-    #     dataset_remeshed_normalized.show_mesh("m0.ply")
+    if len(sys.argv) == 2:
+        dataset_remeshed_normalized.show_mesh(sys.argv[1])
+    else:
+        dataset_remeshed_normalized.show_mesh("m0.ply")

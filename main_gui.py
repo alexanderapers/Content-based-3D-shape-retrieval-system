@@ -1,11 +1,8 @@
+#### This code has been taken from Github (https://github.com/EdwardChamberlain/PySimpleGUI-3D-Viewer) #####
+#### and modeified by us to change the mesh viewer and serve our purpose ####
+
+
 import PySimpleGUI as sg
-
-#from PySimpleGUI3D import planar_projection
-#from PySimpleGUI3D import obj_reader
-#from PySimpleGUI3D import workarounds
-
-#import trimesh
-#import pyrender
 
 import os
 import re
@@ -15,36 +12,6 @@ import sys
 from dataset import Dataset
 from distance import Distance
 from ANN import Annoy
-
-# def RGB_2_HEX(x: tuple):
-#     return f"#{x[0]:02x}{x[1]:02x}{x[2]:02x}"
-# def get_boundries(points,i):
-#     mn = 1000000
-#     mx = -1000000
-#     for point in points:
-#         if point[i]>mx:
-#             mx = point[i]
-#         if point[i]<mn:
-#             mn = point[i]
-#     return mn,mx
-# def standerdize(n,mn,mx):
-#     n = (n-mn)/(mx-mn)
-#     return n
-# def correct_dimensions(obj):
-#     n = len(obj.verts[0])
-#     dims_ranges = []
-#     for i in range(n):
-#         ds = [v[i] for v in obj.verts]
-#         dims_ranges.append(max(ds)-min(ds))
-#     # x is the longest, y is the next, and z is the least
-#     sorting = np.argsort(dims_ranges)[::-1]
-#     # sorting = [2,1,0]
-#     new_vertices = [[0,0,0]for _ in obj.verts]
-#     for i,vert in enumerate(obj.verts):
-#         for j,idx in enumerate(sorting):
-#             new_vertices[i][j] = vert[idx]
-#     obj.verts = new_vertices
-#     return obj
 
 
 def refresh_view(RENDER_MODE,objects,nums=None):
@@ -149,7 +116,7 @@ while True:
         meshes = [i[0] for i in result]
         meshpaths = [ds.get_mesh_file_path(m) for m in meshes]
         meshes_names[1:] = meshes
-        #print(meshes, meshpaths)
+        print(meshes, meshpaths)
         dists = [i[1] for i in result]
 
         objects[1:] = list(meshpaths)

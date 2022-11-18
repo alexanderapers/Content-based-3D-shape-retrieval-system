@@ -1,11 +1,10 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import pylab as pl
 
-#histograms for vector features 
+#histograms for vector features
 
-#setting up 
+#setting up
 df = pd.read_csv('features/Princeton_remeshed_normalized_shape_features.csv')
 with open('princeton_labels.txt') as file:
     categories = file.read().splitlines()
@@ -113,4 +112,4 @@ fig.show()
     #print(len(info))
 
 
-#D1 
+#D1

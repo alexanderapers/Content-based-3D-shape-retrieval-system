@@ -1,6 +1,6 @@
 # INFOMR-2022
 
-Dependencies:
+Main dependencies:
 - trimesh
 - scipy
 - pyglet==1.5.27
@@ -13,30 +13,30 @@ Dependencies:
 - Annoy
 - seaborns
 - pickle
+- pandas
+- numpy
+- sklearn
+- tqdm
+- matplotlib
 
-To visualise a mesh run like this:  
-**python main.py mesh_name**  
+Run the command "pip install -r requirements.txt" to install all the dependencies.
+
+To visualise a mesh, run like this:  
+
+* python main.py _mesh_name_
+
 example:  
-**python main.py m484.ply**  
+* python main.py m484.ply
 or:  
-**python main.py**  
+* python main.py
 to only open first mesh file  
 
-To visualise a querying UI run like this:
-<!--* create a folder named "meshes" and in this folder place meshes folders
-(I have Princeton, Princeton_remeshed,Princeton_remeshed_normalized right now)-->
-<!--* make sure you have the PySimpleGUI3D folder, which is taken from Github (https://github.com/EdwardChamberlain/PySimpleGUI-3D-Viewer) for some dependencies:
-     1. object reader to read the object (changed to read .ply)
-     2. the planar projection camera to render the 3D objects
-     3. the function refresh view (a simple function to update the graphs which is changed too)
+To visualise the querying UI run like this:
 
-* run "pip install -r requirements.txt" -->
-* run "python main_gui.py"
+* python main_gui.py
 
-It will automatically use our custom distance function. To use the ANN querying with L2 distance function, add the "--ann" command line argument.
+It will automatically use our custom distance function.
+To use the ANN querying with L2 distance function, add the "--ann" command line argument.
 
-* "python main_gui.py --ann"
-* "python main_gui.py --custom"
-
-<!--P.S.
-The step of creating the "meshes" folder is just to make the hard coded paths in the code work fine for testing purposes. You can change these paths instead if you don't want to change your meshes location in your local computer-->
+* python main_gui.py --ann
+* python main_gui.py --custom
