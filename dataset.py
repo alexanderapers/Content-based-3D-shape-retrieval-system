@@ -77,7 +77,7 @@ class Dataset:
             os.mkdir("features")
         with open(os.getcwd() + "/features/" + self.folder_name_dataset + "_elementary_features.csv", "w") as conn:
             writer = csv.writer(conn)
-            writer.writerow(["mesh name", "area", "compactness", "AABB_volume", "diameter", "eccentricity"])
+            writer.writerow(["mesh name", "category", "area", "compactness", "AABB_volume", "diameter", "eccentricity"])
             for mesh in tqdm(self.make_all_meshes()):
                 if mesh.name not in self.exclude_list:
                     writer.writerow(Features_Mesh(mesh).get_all_elementary_features())
@@ -88,10 +88,13 @@ class Dataset:
         if not os.path.exists(join(os.getcwd(), "features")):
             os.mkdir("features")
         with open(os.getcwd() + "/features/" + self.folder_name_dataset + "_shape_features.csv", "w") as conn:
+            for mesh in self:
+                shape_features = Shape_Features_Mesh(mesh)
+                break
             writer = csv.writer(conn)
-            ft_names = [ft + "_" + str(i) for ft in ["A3", "D1", "D2", "D3", "D4"] for i in range(1, 11)]
+            ft_names = [ft + "_" + str(i) for ft in ["A3", "D1", "D2", "D3", "D4"] for i in range(1, shape_features.n_bins + 1)]
             writer.writerow(["mesh name"] + ft_names)
-            for mesh in tqdm(self.make_all_meshes()):
+            for mesh in tqdm(self):
                 if mesh.name not in self.exclude_list:
                     writer.writerow(Shape_Features_Mesh(mesh).get_all_shape_features())
 
@@ -109,12 +112,12 @@ class Dataset:
         merged = a.merge(b, on='mesh name')
         merged.to_csv(all_features_file_path, index=False)
 
-        df = pd.read_csv(all_features_file_path)
-        old_order = list(df.columns)
-        ft_names = [ft + "_" + str(i) for ft in ["A3", "D1", "D2", "D3", "D4"] for i in range(1, 11)]
-        new_order = ["mesh name", "category", "area", "compactness", "AABB_volume", "diameter", "eccentricity"] + ft_names
-        df_reorder = df[new_order]
-        df_reorder.to_csv(all_features_file_path, index=False)
+        # df = pd.read_csv(all_features_file_path)
+        # old_order = list(df.columns)
+        # ft_names = [ft + "_" + str(i) for ft in ["A3", "D1", "D2", "D3", "D4"] for i in range(1, 11)]
+        # new_order = ["mesh name", "category", "area", "compactness", "AABB_volume", "diameter", "eccentricity"] + ft_names
+        # df_reorder = df[new_order]
+        # df_reorder.to_csv(all_features_file_path, index=False)
         self.normalize_features_csv()
 
 
@@ -122,12 +125,24 @@ class Dataset:
         print("Normalizing...")
         all_features_file_path = os.getcwd() + "/features/" + self.folder_name_dataset + "_all_features_normalized.csv"
         features = pd.read_csv(all_features_file_path)
+        info = np.zeros(shape=(5,2))
+        info[0,0] = features['area'].mean()
+        info[0,1] = features['area'].std()
+        info[1,0] = features['compactness'].mean()
+        info[1,1] = features['compactness'].std()
+        info[2,0] = features['AABB_volume'].mean()
+        info[2,1] = features['AABB_volume'].std()
+        info[3,0] = features['diameter'].mean()
+        info[3,1] = features['diameter'].std()
+        info[4,0] = features['eccentricity'].mean()
+        info[4,1] = features['eccentricity'].std()
         features['area'] = stats.zscore(features['area'])
         features['compactness'] = stats.zscore(features['compactness'])
         features['AABB_volume'] = stats.zscore(features['AABB_volume'])
         features['diameter'] = stats.zscore(features['diameter'])
         features['eccentricity'] = stats.zscore(features['eccentricity'])
         features.to_csv(all_features_file_path, index=False)
+        np.save("norm_info", info)
 
 
     def get_face_areas_in_bins(self, bins):
@@ -162,7 +177,7 @@ class Dataset:
         for folder in os.listdir(shape_dir):
             if not folder.startswith(".") and not folder.endswith(".txt"):
                 for filename in os.listdir(shape_dir + folder):
-                    if filename.endswith(".ply") or filename.endswith(".obj") or filename.endswith("off"):
+                    if filename.endswith(".ply") or filename.endswith(".obj") or filename.endswith(".off"):
                         file_path = shape_dir + folder + "/" + filename
                         yield file_path
 
@@ -172,6 +187,11 @@ class Dataset:
             if mesh.name == mesh_name:
                 return mesh
         raise Exception("This mesh was not found.")
+
+    def get_mesh_file_path(self, mesh_name):
+        for meshpath in self.get_all_meshes_file_paths():
+            if meshpath.endswith(mesh_name) or meshpath.endswith(mesh_name + ".ply") or meshpath.endswith(mesh_name + ".obj") or meshpath.endswith(mesh_name + ".off"):
+                return meshpath
 
 
     def show_mesh(self, mesh_name):
@@ -253,3 +273,10 @@ class Dataset:
             self.write_bounding_box_csv()
             self.write_alignment_csv()
             self.write_flipping_csv()
+
+    def save_thumbnails(self):
+        progress = 0
+        for mesh in self.make_all_meshes():
+            if mesh.save_thumbnail():
+                progress += 1
+                print(progress, mesh.name)

@@ -1,0 +1,2 @@
+AUC ann over all classes: 0.6431511001109127
+AUC custom over all classes: 0.6806083054674706

@@ -41,3 +41,7 @@ Princeton/*
 Princeton_remeshed/*
 Princeton_remeshed_normalized/*
 *.icloud
+
+thumbnails
+
+query_trees.ann
