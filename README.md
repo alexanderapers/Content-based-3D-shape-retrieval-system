@@ -26,9 +26,9 @@ To visualise a mesh, run like this:
 * python main.py _mesh_name_
 
 example:  
-* python main.py m484.ply
+* python main.py m484.ply 
 or:  
-* python main.py 
+* python main.py  
 to only open first mesh file  
 
 To visualise the querying UI run like this:
