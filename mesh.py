@@ -247,7 +247,7 @@ class Mesh:
 
     def save_thumbnail(self):
         # rotation angle chosen based on what looks okayish
-        cat = re.split(r'\\|/', self.category)[-1] # god shit fuck i hate developing for both windows and mac
+        cat = re.split(r'\\|/', self.category)[-1] # something weird with pathnames between macos and windows, idk
         filepath = "thumbnails" + os.sep + cat + os.sep
         filename = self.name.split('.')[-2] + ".png"
         if not os.path.exists(filepath):
@@ -262,7 +262,7 @@ class Mesh:
         self.mesh.apply_transform(rot) # rotating the mesh is way easier since it's at origin
         sc = scene.Scene(geometry=self.mesh)
         sc.camera.resolution = [240,240]
-        sc.camera_transform = sc.camera.look_at(self.mesh.vertices, distance = 1.41) # zoom out i think? not sure
+        sc.camera_transform = sc.camera.look_at(self.mesh.vertices, distance = 1.41) # zoom out
 
         png = sc.save_image(resolution=[240, 240], visible=True)
         with open(filepath + filename, 'wb') as f:
