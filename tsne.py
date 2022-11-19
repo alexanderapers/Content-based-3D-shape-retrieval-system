@@ -47,5 +47,6 @@ class DimRed:
 
 
     def plot(self):
-        sns.scatterplot(self.X_embedded, x="0", y="1", style="category", hue="category", legend=True)
+        splt = sns.scatterplot(self.X_embedded, x="0", y="1", palette = sns.color_palette("hls", 17), style="category", hue="category", legend=True, s=150)
+        sns.move_legend(splt, "upper center", ncol=9, bbox_to_anchor=(0.5,0), fontsize=16)
         plt.show()

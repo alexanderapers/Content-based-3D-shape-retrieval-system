@@ -12,6 +12,8 @@ class Shape_Features_Mesh:
         #start_time = time.time()
         self.turn_off_logger()
         self.mesh = mesh
+        self.category = mesh.category
+        print(self.category)
         self.n_samples = n_samples
         self.minimum_n_samples = minimum_n_samples
         self.cutoff = self.get_all_points()

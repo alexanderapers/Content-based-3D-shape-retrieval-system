@@ -14,15 +14,14 @@ d1_labels = ['D1_1']
 d2_labels = ['D2_1']
 d3_labels = ['D3_1']
 d4_labels = ['D4_1']
-for i in range(2, 11):
+for i in range(2, 31):
     a3_labels.append('A3_' + str(i))
     d1_labels.append('D1_' + str(i))
     d2_labels.append('D2_' + str(i))
     d3_labels.append('D3_' + str(i))
     d4_labels.append('D4_' + str(i))
 
-a3_bins = [9, 27, 45, 63, 81, 99, 117, 135, 153, 171]
-ten_bins = range(0, 10)
+bins = range(0, 30)
 
 #A3
 fig, plots = plt.subplots(12, 4, figsize=(15, 25))
@@ -34,7 +33,7 @@ for i in range(0, len(categories)):
     info = df.loc[df['category'] == category]
     a3 = info[a3_labels]
     for index, row in a3.iterrows():
-        plots[y_index, x_index].plot(a3_bins, row.values)
+        plots[y_index, x_index].plot(bins, row.values)
     plots[y_index, x_index].set(xlabel=category)
 
 fig.suptitle("Angle between 3 random points")
@@ -51,7 +50,7 @@ for i in range(0, len(categories)):
     info = df.loc[df['category'] == category]
     d1 = info[d1_labels]
     for index, row in d1.iterrows():
-        plots[y_index, x_index].plot(ten_bins, row.values)
+        plots[y_index, x_index].plot(bins, row.values)
     plots[y_index, x_index].set(xlabel=category)
 
 fig.suptitle("Distance between barycenter and random vertex")
@@ -68,7 +67,7 @@ for i in range(0, len(categories)):
     info = df.loc[df['category'] == category]
     d2 = info[d2_labels]
     for index, row in d2.iterrows():
-        plots[y_index, x_index].plot(ten_bins, row.values)
+        plots[y_index, x_index].plot(bins, row.values)
     plots[y_index, x_index].set(xlabel=category)
 
 fig.suptitle("Distance between 2 random vertices")
@@ -85,7 +84,7 @@ for i in range(0, len(categories)):
     info = df.loc[df['category'] == category]
     d3 = info[d3_labels]
     for index, row in d3.iterrows():
-        plots[y_index, x_index].plot(ten_bins, row.values)
+        plots[y_index, x_index].plot(bins, row.values)
     plots[y_index, x_index].set(xlabel=category)
 
 fig.suptitle("Square root of area of triangle given by 3 random vertices")
@@ -102,7 +101,7 @@ for i in range(0, len(categories)):
     info = df.loc[df['category'] == category]
     d4 = info[d4_labels]
     for index, row in d4.iterrows():
-        plots[y_index, x_index].plot(ten_bins, row.values)
+        plots[y_index, x_index].plot(bins, row.values)
     plots[y_index, x_index].set(xlabel=category)
 
 fig.suptitle("Cube root of volume of tetrahedron formed by 4 random vertices")

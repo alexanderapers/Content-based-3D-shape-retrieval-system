@@ -19,7 +19,7 @@ plt.savefig("resample_plots/num_vertices")
 plt.show()
 
 
-category histogram
+# category histogram
 figure(figsize=(9, 9))
 df = pd.read_csv('csv/Princeton_basic_mesh_info.csv')
 df2 = df['category'].value_counts().plot(kind ='barh', color='plum')
@@ -29,7 +29,7 @@ plt.title("Distribution by category")
 plt.savefig("resample_plots/categories", bbox_inches="tight")
 plt.show()
 
-faces histogram before
+# faces histogram before
 df = pd.read_csv('csv/Princeton_basic_mesh_info.csv')
 faces = df['n_faces']
 faces = [x for x in faces if x <= 20000]
@@ -41,7 +41,7 @@ plt.savefig("resample_plots/num_faces")
 plt.show()
 
 
-centroid before translation histogram
+# centroid before translation histogram
 df2 = pd.read_csv('csv/Princeton_basic_mesh_info.csv')
 centroid_origin = df2['d_centroid_origin']
 plt.hist(centroid_origin[centroid_origin < 2], color='plum', bins=100)
